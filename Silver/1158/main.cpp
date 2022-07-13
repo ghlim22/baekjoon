@@ -1,52 +1,47 @@
-//https://www.acmicpc.net/problem/1158
-//1158
+// https://www.acmicpc.net/problem/1158
+// 1158
+//요세푸스 순열
 
 #include <iostream>
 #include <queue>
 using namespace std;
 
-int main(int argc, const char * argv[])
+int main(int argc, const char *argv[])
 {
-    int N, K;
-    cin >> N >> K;
-    
     queue<int> q;
-    
-    for (int i = 1; i <= N; ++i)
+
+    int n, k;
+    cin >> n >> k;
+
+    for (int i = 1; i <= n; ++i)
     {
         q.push(i);
     }
-    
-    cout << "<";
-    while (!q.empty())
+
+    if (k > n)
     {
-        for (int i = 0; i < K - 1; ++i)
+        k %= n;
+    }
+
+    cout << "<";
+    for (int i = 0; i < n; ++i)
+    {
+        // k - 1 번째 사람까지 앞에서 빼준 뒤 다시 뒤에 넣어준다.
+        for (int j = 0; j < k - 1; ++j)
         {
-            if (!q.empty())
-            {
-                q.push(q.front());
-                q.pop();
-            }
-            else
-            {
-                break;
-            }
-        }
-        
-        if (!q.empty())
-        {
-            cout << q.front();
+            int temp = q.front();
+            q.push(temp);
             q.pop();
-            if (q.empty())
-            {
-                cout << ">";
-            }
-            else
-            {
-                cout << ", ";
-            }
+        }
+        int temp = q.front();
+        q.pop();
+        cout << temp;
+        if (i != n - 1)
+        {
+            cout << ", ";
         }
     }
-    
+    cout << ">";
+
     return 0;
 }
