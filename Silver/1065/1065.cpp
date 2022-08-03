@@ -4,8 +4,8 @@
 #include <bits/stdc++.h>
 #define fastio cin.tie(0)->sync_with_stdio(0)
 #define precision(x) \
-    cout << fixed;   \
-    cout.precision(x)
+cout << fixed;   \
+cout.precision(x)
 #define ll long long
 #define pii pair<int, int>
 
@@ -20,32 +20,53 @@ int get_num(int n, int i);
 
 void solve(int num)
 {
-    for (int i = 1; i <= num; ++i)
+    if (num < 100)
     {
-        int digit_cnt = get_digit_cnt(i);
-        if (digit_cnt <= 2)
+        ans += num;
+    }-
+    else
+    {
+        ans += 99;
+        for (int i = 100; i <= num; ++i)
         {
-            ans++;
-        }
-        else
-        {
-            bool is_han = true;
-            int difference = get_num(i, 1) - get_num(i, 0);
-            for (int j = 1; j < digit_cnt - 1; ++j)
-            {
-                if (difference != (get_num(i, j + 1) - get_num(i, j)))
-                {
-                    is_han = false;
-                    break;
-                }
-            }
-
-            if (is_han)
+            /*
+             int digit_cnt = get_digit_cnt(i);
+             
+             if (digit_cnt <= 2)
+             {
+             ans++;
+             }
+             
+             
+             
+             bool is_han = true;
+             int difference = get_num(i, 1) - get_num(i, 0);
+             for (int j = 1; j < digit_cnt - 1; ++j)
+             {
+             if (difference != (get_num(i, j + 1) - get_num(i, j)))
+             {
+             is_han = false;
+             break;
+             }
+             }
+             
+             if (is_han)
+             {
+             ans++;
+             }
+             */
+            
+            int hundred = num / 100;
+            int ten = num / 10 % 10;
+            int one = num % 10;
+            
+            if ((hundred - ten) == (ten - one))
             {
                 ans++;
             }
         }
     }
+    
 }
 
 // n이 몇 자리인지 구한다.
@@ -71,8 +92,8 @@ signed main()
     fastio;
     cin >> N;
     solve(N);
-
+    
     cout << ans;
-
+    
     return 0;
 }

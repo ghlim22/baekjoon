@@ -20,7 +20,7 @@ bool check_row[BOARD_SIZE][BOARD_SIZE], check_col[BOARD_SIZE][BOARD_SIZE], check
 
 void solve(int count)
 {
-    if (81 == count)
+    if (81 == count) // 스도쿠 보드판을 다 돌았으면 출력 후 종료.
     {
         for (int i = 0; i < BOARD_SIZE; ++i)
         {
@@ -32,6 +32,7 @@ void solve(int count)
         }
         exit(0);
     }
+
     int row = count / 9;
     int col = count % 9;
 
@@ -49,17 +50,21 @@ void solve(int count)
 
                 solve(count + 1);
 
-                sudoku[row][col] = 0;
+                sudoku[row][col] = 0; // 다음 함수 호출을 위해서 다시 0으로 돌려준다.
 
                 check_row[row][i] = false;
                 check_col[col][i] = false;
                 check_square[row / 3 * 3 + col / 3][i] = false;
             }
+            if (i == 8)
+            {
+                return;
+            }
         }
     }
     else
     {
-        solve(count + 1);
+        solve(count + 1); // 보드 판 위 수가 0이 아니면 그냥 다음 함수를 호출한다.
     }
 }
 
@@ -72,11 +77,13 @@ signed main()
         for (int j = 0; j < BOARD_SIZE; ++j)
         {
             cin >> temp;
+            /*
             if (temp == 0)
             {
                 zero_cnt++;
             }
-            else
+             */
+            if (temp != 0)
             {
                 check_row[i][temp - 1] = true;
                 check_col[j][temp - 1] = true;
