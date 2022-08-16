@@ -14,7 +14,6 @@ using namespace std;
 
 static const int INF = 0x3f3f3f3f;
 
-int zero_cnt = 0;
 int sudoku[BOARD_SIZE][BOARD_SIZE];
 bool check_row[BOARD_SIZE][BOARD_SIZE], check_col[BOARD_SIZE][BOARD_SIZE], check_square[BOARD_SIZE][BOARD_SIZE];
 
@@ -56,7 +55,7 @@ void solve(int count)
                 check_col[col][i] = false;
                 check_square[row / 3 * 3 + col / 3][i] = false;
             }
-            if (i == 8)
+            if (i == 8) // 숫자를 다 순회했으면 반환해준다.
             {
                 return;
             }
@@ -77,12 +76,6 @@ signed main()
         for (int j = 0; j < BOARD_SIZE; ++j)
         {
             cin >> temp;
-            /*
-            if (temp == 0)
-            {
-                zero_cnt++;
-            }
-             */
             if (temp != 0)
             {
                 check_row[i][temp - 1] = true;
