@@ -2,28 +2,44 @@
 #include <stdlib.h>
 #include <string.h>
 
-static char words[20000][51];
+typedef struct s_words
+{
+	char content[51];
+} t_word;
+
+static t_word words[200000];
+
 static int N;
 
-static int my_compare(const void *a, const void *b)
+static int my_compare(const void *first, const void *second)
 {
-    char *str1 = (char *)a;
-    char *str2 = (char *)b;
+	t_word a = *(t_word *)first;
+	t_word b = *(t_word *)second;
 
-    int len1 = strlen(str1);
-    int len2 = strlen(str2);
-    if (len1 == len2)
-        return (strcmp(str1, str2));
-    if (len1 < len2)
-        return (-1);
-    if (len1 == len2)
-        return (0);
-    return (1);
+	int len0 = strlen(a.content);
+	int	len1 = strlen(b.content);
+	if (len0 == len1)
+		return (strcmp(a.content, b.content));
+	if (len0 < len1)
+		return (-1);
+	if (len0 == len1)
+		return (0);
+	return (1);
 }
 
 int main(void)
 {
     scanf("%d", &N);
     for (int i = 0; i < N; ++i)
-        scanf(" %s", words[i]);
+    {
+    	scanf("%50s", words[i].content);
+	}
+	qsort(words, N, sizeof(t_word), my_compare);
+	for (int i = 0; i < N; ++i)
+	{
+		if (i > 0 && strcmp(words[i-1].content, words[i].content) == 0)
+			continue;
+		printf("%s\n", words[i].content);
+	}
+	return (0);
 }
