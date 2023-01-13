@@ -11,44 +11,11 @@
 
 using namespace std;
 
-static const int INF = 0x3f3f3f3f;
-
-/*
-static void swap(int *a, int *b)
-{
-	(*a)^=(*b);
-	(*b)^=(*a);
-	(*a)^=(*b);
-}
-
-static void solve(int *A, int N) 
-{
-	bool changed = false;
-	for (int i=1; i<=N+1; i++) 
-	{
-    	changed = false;
-    	for (int j=1; j<=N-i; j++) 
-		{
-        	if (A[j] > A[j+1]) 
-			{
-            	changed = true;
-            	swap(A[j], A[j+1]);
-        	}
-    	}
-    	if (changed == false) 
-		{
-        	cout << i << '\n';
-        	break;
-    	}
-	}
-}
-*/
-
 signed main() 
 {
 	fastio;
 	int N;
-	
+
 	cin >> N;
 	pair<int, int> arr[N];
 	for (int i = 0; i < N; ++i)
@@ -63,9 +30,5 @@ signed main()
 	for (int i = 0; i < N; ++i)
 		ans = max(ans, arr[i].second - i);
 	cout << (ans + 1) << "\n";
-	/*
-	for (int i = 0; i < N; ++i)
-		cout << arr[i].first << " " << arr[i].second << "\n"; 
-	*/
 	return 0;
 }
