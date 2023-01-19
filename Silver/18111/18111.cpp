@@ -29,13 +29,13 @@ void solve() {
 		for (int i = height + 1; i <= UPPERBOUND; ++i)
 		{
 			cur_inven += (i - height) * arr[i];
-			cur_time += 2 * (i - height ) * arr[i];
+			cur_time += 2 * (i - height) * arr[i];
 		}
 		// 목표 높이보다 낮은 블록의 개수 세기.
 		for (int i = 0; i < height; ++i)
 		{
 			cur_inven -= (height - i) * arr[i];
-			cur_time += (height - i ) * arr[i];
+			cur_time += (height - i) * arr[i];
 			if (cur_inven < 0)
 				break ;
 		}

@@ -56,7 +56,7 @@ void solve(const char *str, bool broken[])
 	smaller = cur;
 
 	// 원하는 채널에 가장 가까운 큰 수 구하기.
-	// 구하지 못 하면 500001.
+	// 구하지 못 하면 1000000.
 	for (cur = dst; cur < 1000000; ++cur)
 	{
 		if (check(cur, broken))
@@ -74,7 +74,7 @@ void solve(const char *str, bool broken[])
 		cnt_s += get_digit_cnt(smaller);
 	}
 
-	if (larger == INT_MAX)
+	if (larger == 1000000)
 	{
 		cnt_l = INT_MAX;
 	}
