@@ -17,7 +17,6 @@ static int alphabet_cnt = 0;
 static bool success_flag = false;
 static bool is_used_num[10] = {false, };
 static int conversion_table[26] = {0, };
-static const int INF = 0x3f3f3f3f;
 
 static ll convert_num(const char *str)
 {
@@ -54,7 +53,6 @@ void solve(int lv)
 			is_used_num[i] = false;
 		}
 	}
-
 }
 
 signed main() 
@@ -74,6 +72,11 @@ signed main()
 				alphabet_cnt++;
 			}
 		}
+	}
+	if (alphabet_cnt >= 10)
+	{
+		cout << "NO";
+		return (0);
 	}
 	solve(0);
 	if (success_flag)
