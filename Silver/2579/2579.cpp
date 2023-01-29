@@ -14,7 +14,6 @@ signed main() {
 	fastio;
 
 	int	stairs_cnt = 0;
-	ll	ans = 0;
 
 	cin >> stairs_cnt;
 	for (int i = 0; i < stairs_cnt; ++i)
