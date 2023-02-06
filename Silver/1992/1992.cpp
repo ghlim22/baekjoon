@@ -2,14 +2,7 @@
 // 1992번 
 
 #include <iostream>
-#define fastio cin.tie(0)->sync_with_stdio(0)
-#define precision(x) cout << fixed; cout.precision(x)
-#define ll long long
-#define pii pair<int, int>
 #define MAX_SIZE (64)
-
-#define WHITE_COLOR (0)
-#define BLACK_COLOR (1)
 
 using namespace std;
 
@@ -59,15 +52,6 @@ signed main()
 		}
 	}
 	solve(0, 0, size);
-	/*
-	printf("\n");
-	for (int i = 0; i < size; ++i)
-	{
-		for (int j = 0; j < size; ++j)
-			printf("%d", video[i][j]);
-		printf("\n");
-	}
-	*/
 
 	return (0);
 }
