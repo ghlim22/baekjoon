@@ -24,7 +24,6 @@ void solve(int computer_cnt)
 		{
 			visited[bfs_queue.front()] = true;
 			ans++;
-			cout << bfs_queue.front() << '\n';
 		}
 
 		for (int i = 0; i < computer_cnt; ++i)
