@@ -3,47 +3,50 @@
 
 #include <iostream>
 #define fastio cin.tie(0)->sync_with_stdio(0)
+#define MAX (1000000)
 
 using namespace std;
 
-static bool is_prime(int num)
+static int spf[MAX + 1];
+static int primes[MAX + 1];
+static int prime_cnt = 0;
+
+static void linear_sieve(void)
 {
-	if (num <= 1)
-		return (false);
-	for (int i = 2; i * i <= num; ++i)
+	for (int i = 2; i <= MAX; ++i)
 	{
-		if (num % i == 0)
-			return (false);
+		if (spf[i] == 0)
+		{
+			spf[i] = i;
+			primes[prime_cnt++] = i;
+		}
+		for (int j = 0; i * primes[j] <= MAX; ++j)
+		{
+			spf[i * primes[j]] = primes[j];
+			if (i % primes[j] == 0)
+				break ;
+		}
 	}
-	return (true);
 }
 
 signed main() {
 	fastio;
+	linear_sieve();
 	while (true)
 	{
-		int input = 0;
-		int smaller = 0;
-		int larger = 0;
-		bool found = false;
+		int num = 0;
 
-		cin >> input;
-		if (input == 0)
+		cin >> num;
+		if (num == 0)
+			break ;
+		for (int i = 3; i <= num / 2; i += 2)
 		{
-			break;
-		}
-		for (int i = 3; i <= input / 2; i += 2)
-		{
-			if (is_prime(i) && is_prime(input - i))
+			if (spf[i] == i && spf[num - i] == num - i)
 			{
-				found = true;
-				smaller = i;
-				larger = input - i;
+				cout << num << " = " << i << " + " << num - i << '\n';
 				break ;
 			}
 		}
-		if (found)
-			cout << input << " = " << smaller << " + " << larger << '\n';
 	}
 
 	return (0);
