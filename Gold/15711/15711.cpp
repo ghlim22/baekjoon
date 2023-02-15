@@ -2,11 +2,83 @@
 // 15711번 
 
 #include <iostream>
-#include <algorithm>
 #define fastio cin.tie(0)->sync_with_stdio(0)
 #define ll long long
+#define MAX (2000000)
 
 using namespace std;
+
+static int spf_arr[MAX + 1];
+static int prime_nums_arr[MAX + 1];
+static int prime_nums_cnt = 0;
+
+static void linear_sieve(void)
+{
+	for (int i = 2; i <= MAX; ++i)
+	{
+		if (spf_arr[i] == 0)
+		{
+			spf_arr[i] = i;
+			prime_nums_arr[prime_nums_cnt++] = i;
+		}
+		for (int j = 0; prime_nums_arr[j] * i <= MAX; ++j)
+		{
+			spf_arr[prime_nums_arr[j] * i] = prime_nums_arr[j];
+			if (i % prime_nums_arr[j] == 0)
+				break ;
+		}
+	}
+}
+
+signed main() {
+	fastio;
+
+	unsigned ll test_cnt, a, b, sum;
+
+	linear_sieve();
+
+	cin >> test_cnt;
+	while (test_cnt--)
+	{
+		cin >> a >> b;
+		sum = a + b;
+
+		if (sum <= 3)
+			cout << "NO\n";
+		else if (~sum & 1)
+			cout << "YES\n";
+		else
+		{
+			sum -= 2;
+			bool is_prime = true;
+			if (sum <= MAX)
+			{
+				if (spf_arr[sum] != sum)
+					is_prime = false;
+			}
+			else
+			{
+				for (int i = 0; i < prime_nums_cnt; ++i)
+				{
+					if (sum % prime_nums_arr[i] == 0)
+					{
+						is_prime = false;
+						break ;
+					}
+				}
+			}
+
+			if (is_prime)
+				cout << "YES\n";
+			else
+				cout << "NO\n";
+		}
+
+	}
+	return (0);
+}
+
+/*
 
 static unsigned ll fast_power(int base, int exp, int mod)
 {
@@ -57,27 +129,4 @@ static bool is_prime(unsigned ll n, unsigned ll a)
 		k >>= 1;
 	}
 }
-
-signed main() {
-	fastio;
-
-	unsigned ll test_cnt, a, b;
-
-	cin >> test_cnt;
-
-	for (int i = 0; i < test_cnt; ++i)
-	{
-		cin >> a >> b;
-		unsigned ll line = a + b;
-		if (line == 2)
-			cout << "NO\n";
-		else if (~line & 1)
-			cout << "YES\n";
-		else if (is_prime(line - 2, 2) && is_prime(line - 2, 7) && is_prime(line - 2, 61))
-			cout << "YES\n";
-		else
-			cout << "NO\n";
-	}
-
-	return (0);
-}
+*/
