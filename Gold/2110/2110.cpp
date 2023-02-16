@@ -19,7 +19,6 @@ signed main()
     sort(houses, houses + house_cnt);
     int left = 1;
     int right = houses[house_cnt - 1] - houses[0];
-    int ans = 0;
     while (left <= right)
     {
         int mid = left + (right - left) / 2;
@@ -40,7 +39,7 @@ signed main()
         else
             right = mid - 1;
     }
-    
+
     cout << right;
 
     return 0;

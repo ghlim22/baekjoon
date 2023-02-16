@@ -2,7 +2,9 @@
 // 2961_2번 
 
 #include <iostream>
+#include <vector>
 #include <cmath>
+#include <limits.h>
 #define fastio cin.tie(0)->sync_with_stdio(0)
 #define precision(x) cout << fixed; cout.precision(x)
 #define ll long long
@@ -11,45 +13,31 @@
 
 using namespace std;
 
-static int sour_arr[10];
-static int bitter_arr[10];
-static ll sour_sum[MAX_CNT];
-static ll bitter_sum[MAX_CNT];
-static int sour_cnt = 0;
-static int bitter_cnt = 0;
-
 signed main() {
 	fastio;
 
-	int ingredients_cnt = 0;
-	cin >> ingredients_cnt;
-	for (int i = 0; i < ingredients_cnt; ++i)
-		cin >> sour_arr[i] >> bitter_arr[i];
-	int limit = (int)pow(2, ingredients_cnt);
-	for (int i = 1; i < limit; ++i)
+	int ingredient_cnt = 0;
+	ll	ans = LONG_MAX;
+	cin >> ingredient_cnt;
+	int limit = 1 << ingredient_cnt;
+	vector< pii > ingre;
+	ingre.resize(ingredient_cnt);
+	for (int i = 0; i < ingredient_cnt; ++i)
+		cin >> ingre[i].first >> ingre[i].second;
+	for (int idx = 1; idx < limit; ++idx)
 	{
-		sour_sum[sour_cnt] = 1;
-		for (int j = 0; j < ingredients_cnt; ++j)
+		ll sour_sum = 1;
+		ll bitter_sum = 0;
+		for (int i = 0; i < ingredient_cnt; ++i)
 		{
-			if ((i >> j) & 1)
-				sour_sum[sour_cnt] *= sour_arr[j];
+			if (idx & (1 << i))
+			{
+				sour_sum *= ingre[i].first;
+				bitter_sum += ingre[i].second;
+			}
 		}
-		sour_cnt++;
+		ans = min(ans, abs(sour_sum - bitter_sum));
 	}
-	for (int i = 1; i < limit; ++i)
-	{
-		for (int j = 0; j < ingredients_cnt; ++j)
-		{
-			if ((i >> j) & 1)
-				bitter_sum[bitter_cnt] += bitter_arr[j];
-		}
-		bitter_cnt++;
-	}
-	ll ans = abs(sour_sum[0] - bitter_sum[0]);
-	for (int i = 1; i < sour_cnt; ++i)
-	{
-		ans = min(ans, abs(sour_sum[i] - bitter_sum[i]));
-	}	
 	cout << ans;
 	return (0);
 }
