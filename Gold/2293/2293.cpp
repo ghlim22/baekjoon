@@ -2,58 +2,44 @@
 // 2293번 
 
 #include <iostream>
-#include <vector>
 #define fastio cin.tie(0)->sync_with_stdio(0)
+#define precision(x) cout << fixed; cout.precision(x)
 #define ll long long
+#define pii pair<int, int>
 
 using namespace std;
 
-static vector<int> coins;
-static int cases[10001];
+static const int INF = 0x3f3f3f3f;
 
-signed main() {
+static int coins[100];
+static int dp[10001];
+
+signed main() 
+{
 	fastio;
 
 	int coin_cnt = 0;
-	int dest_sum = 0;
+	int total = 0;
 
-	cin >> coin_cnt >> dest_sum;
-	for (int i = 0; i < coin_cnt; ++i){
-		int input;
+	cin >> coin_cnt >> total;
 
-		cin >> input;
-		coins.push_back(input);
-	}
-	cout << '\n';
-	cases[0] = 0;
-	for (int i = 1; i <= dest_sum; ++i)
+	for (int i = 0; i < coin_cnt; ++i)
+		cin >> coins[i];
+
+	dp[0] = 1;
+	
+	for (int i = 0; i < coin_cnt; ++i)
 	{
-		int j;
-		int k = 0;
-		for (j = i - 1; j > 0; --j)
+		for (int j = coins[i]; j <= total; ++j)
 		{
-			for (k = 0; k < coin_cnt; ++k)
+			if (dp[j - coins[i]] > 0)
 			{
-				if ((i - j) % coins[k] == 0){
-					//cout << i << j << k << '\n';
-					goto GET;
-				}
-			}	
+				dp[j] += dp[j - coins[i]];
+			}
 		}
-		GET:
-		if (j != 0)
-			cases[i] = cases[j];
-		else
-			cases[i] = 0;
-		
-		for (int l = 0; l < coin_cnt; ++l)
-		{
-			if ((j == 0 || l != k) && i % coins[l] == 0)
-				cases[i]++;
-		}
-		cout << cases[i] << '\n';
 	}
-	cout << cases[dest_sum];
+
+	cout << dp[total];
 
 	return (0);
 }
