@@ -2,48 +2,62 @@
 // 22983번 
 
 #include <iostream>
-#define precision(x) cout << fixed; cout.precision(x)
+#include <algorithm>
 #define ll long long
-#define pii pair<int, int>
+#define MAX_LEN (3000)
 
 using namespace std;
 
-static int N;
-static int M;
-static int chess[3000][3000];
-static int ans = 0;
+static char chess[MAX_LEN][MAX_LEN];
+static ll dp[MAX_LEN + 1];
 
-void solve(int row, int col) 
+static bool check_chess(int x, int y)
 {
-	for (int i )
+	char cur, left, up, dia_left;
+
+	cur = chess[y][x];
+	left = chess[y][x - 1];
+	up = chess[y - 1][x];
+	dia_left = chess[y - 1][x - 1];
+
+	return ((cur == dia_left) && (cur != left) && (cur != up));
 }
 
-signed main() {
-	scanf("%d %d", &N, &M);
-	for (int i = 0; i < N; ++i)
+signed main() 
+{
+	int n, m;
+	ll	ans, prev, temp;
+
+	scanf("%d %d", &n, &m);
+	for (int i = 0; i < n; ++i)
 	{
-		for (int j = 0; j < M; ++j)
+		for (int j = 0; j < m; ++j)
 		{
-			char c;
-			scanf(" %c", &c);
-			if (c == 'B')
-				chess[i][j] = 1;
+			scanf(" %c", &chess[i][j]);
+		}
+	}
+
+	ans = n * m;
+	prev = 0;
+	for (int i = 1; i < n; ++i)
+	{
+		for (int j = 1; j < m; ++j)
+		{
+			temp = dp[j];
+			if (check_chess(j, i))
+			{
+				dp[j] = min(min(dp[j], dp[j - 1]), prev) + 1;
+			}
 			else
-				chess[i][j] = 0;
+			{
+				dp[j] = 0;
+			}
+			prev = temp;
+			ans += dp[j];
 		}
 	}
 
-	for (int i = 0; i < N; ++i)
-	{
-		for (int j = 0; j < M; ++j)
-		{
+	printf("%lld", ans);
 
-		}
-	}
-
-	
-
-
-
-	solve();
+	return (0);
 }
