@@ -3,6 +3,10 @@
 
 static int	matrix[MAX_SIZE][MAX_SIZE];
 static int	dp[MAX_SIZE][MAX_SIZE];
+/*
+ * dp[i][j]: (i, j)를 우하단의 끝점으로 가정할 때, 해당 영역에 고를 수 있는 최대 크기의 정사각형의 한 변의 길이.
+ * matrix[i][j] == 1 이면, 해당 칸을 우하단 모서리로 둔다. dp[i][j] = min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
+ */
 static int	maximum_size;
 
 static int get_min(int x, int y)
