@@ -68,13 +68,7 @@ int main(void)
 		scanf("%s", pocketmon_dict[i]);
 		order_arr[i] = i;
 	}
-	my_qsort(pocketmon_dict, order_arr, 0, pocketmon_cnt - 1);
-	/*
-	for (int i = 0; i < pocketmon_cnt; ++i)
-		printf("%s\n", pocketmon_dict[order_arr[i]]);
-	printf("\n");
-	*/
-
+	my_qsort(pocketmon_dict, order_arr, 0, pocketmon_cnt - 1);	
 	for (int i = 0; i < quiz_cnt; ++i)
 	{
 		char tmp[22];
