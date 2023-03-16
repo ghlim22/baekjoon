@@ -72,11 +72,8 @@ int main(void)
 	for (int i = 0; i < quiz_cnt; ++i)
 	{
 		char tmp[22];
-		char c;
-		char *del_line_p;
 
 		scanf(" %[^\n]", tmp);
-
 		if (isdigit(tmp[0]))
 		{
 			int num = atoi(tmp);
