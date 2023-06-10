@@ -6,7 +6,9 @@ int main(void)
 	int prev = 0;
 	int ball_cnt = 0;
 	int max = 0;
-	int arr[200000] = {0, };
+	int arr[200000] = {
+		0,
+	};
 
 	scanf("%d", &ball_cnt);
 	for (int i = 0; i < ball_cnt; ++i)

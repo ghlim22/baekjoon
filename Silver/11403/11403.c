@@ -1,69 +1,74 @@
 #include <stdio.h>
-#include <string.h>
+#include <limits.h>
 #define MAX_SIZE (100)
+#define INF (100000)
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
 
-static int input_arr[MAX_SIZE][MAX_SIZE];
-static int visited[MAX_SIZE];
-static int n;
+static void input(void);
+static void floyd(void);
+static void print(void);
 
-static void get_input(void);
-static void solve(void);
-static int find_route(int start, int dest, int depth);
+int N;
+int arr[MAX_SIZE][MAX_SIZE];
 
 int main(void)
 {
-	get_input();
-	solve();
-	return (0);
+    input();
+    floyd();
+    print();
+
+    return (0);
 }
 
-static void get_input(void)
+static void input(void)
 {
-	scanf("%d", &n);
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			scanf("%1d", &input_arr[i][j]);
-		}
-	}
+    int i, j;
+
+    scanf("%d", &N);
+    for (i = 0; i < N; ++i)
+    {
+        for (j = 0; j < N; ++j)
+        {
+            scanf("%d", &arr[i][j]);
+            if (!arr[i][j])
+                arr[i][j] = INF;
+        }
+    }
 }
 
-static void solve(void)
+static void floyd(void)
 {
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{	
-			memset(visited, 0x00, sizeof(int) * MAX_SIZE);
-			if (find_route(i, j, 0))
-				printf("1");
-			else
-				printf("0");
-			if (j < n - 1)
-				printf(" ");
-		}
-		printf("\n");
-	}
+    int i, j, k;
+
+    for (k = 0; k < N; ++k)
+    {
+        for (i = 0; i < N; ++i)
+        {
+            for (j = 0; j < N; ++j)
+            {
+                arr[i][j] = MIN(arr[i][j], arr[i][k] + arr[k][j]);
+            }
+        }
+    }
 }
 
-static int find_route(int start, int dest, int depth)
+static void print(void)
 {
-	if (depth > n)
-		return (0);
-	if (depth > 0 && start == dest)
-		return (1);
-	for (int i = 0; i < n; ++i)
-	{
-		if (input_arr[start][i] && !visited[i])
-		{
-			visited[i] = 1;
-			if (i == dest)
-				return (1);
-			if (find_route(i, dest, depth + 1))
-				return (1);
-			visited[i] = 0;
-		}
-	}
-	return (0);	 
+    int i, j;
+
+    for (i = 0; i < N; ++i)
+    {
+        for (j = 0; j < N; ++j)
+        {
+            if (arr[i][j] == INF)
+                printf("0");
+            else
+                printf("1");
+
+            if (j < N - 1)
+                printf(" ");
+        }
+        if (i != N - 1)
+            printf("\n");
+    }
 }
