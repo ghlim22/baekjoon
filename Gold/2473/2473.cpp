@@ -27,6 +27,7 @@ static const int INF = 0x3f3f3f3f;
 
 void solve()
 {
+    
 }
 
 signed main()
