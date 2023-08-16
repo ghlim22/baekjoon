@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <iostream>
 #include <limits.h>
-#include <string.h>
 #define SIZE (1000)
 #define INF (3000)
 
