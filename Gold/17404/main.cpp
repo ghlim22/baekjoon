@@ -1,57 +1,49 @@
 #include <algorithm>
 #include <iostream>
+#include <limits.h>
+#include <string.h>
 #define SIZE (1000)
 #define INF (3000)
 
 typedef enum
 {
-	COLOR_RED,
-	COLOR_BLUE,
-	COLOR_GREEN
+	COLOR_RED = 0,
+	COLOR_GREEN = 1,
+	COLOR_BLUE = 2
 }	e_color;
 
-static int	first_red[SIZE][3];
-static int	first_blue[SIZE][3];
-static int	first_green[SIZE][3];
+static unsigned int	cost[SIZE][3];
+static unsigned	int dp[SIZE][3];
+static unsigned int	ans = INT_MAX;
 
 int main(void)
 {
-	int	red;
-	int	green;
-	int	blue;
 	int	cnt;
-	int	i;
 
 	std::cin >> cnt;
-	std::cin >> red >> green >> blue;
-	first_red[0][COLOR_RED] = red;
-	first_red[0][COLOR_GREEN] = INF;
-	first_red[0][COLOR_BLUE] = INF;
-	first_blue[0][COLOR_RED] = INF;
-	first_blue[0][COLOR_GREEN] = INF;
-	first_blue[0][COLOR_BLUE] = blue;
-	first_green[0][COLOR_RED] = INF;
-	first_green[0][COLOR_GREEN] = green;
-	first_green[0][COLOR_BLUE] = INF;
-	for (i = 1; i < cnt; ++i)
+	for (int i = 0; i < cnt; ++i)
+		std::cin >> cost[i][COLOR_RED] >> cost[i][COLOR_GREEN] >> cost[i][COLOR_BLUE];
+	for (int i = 0; i < 3; ++i)
 	{
-		std::cin >> red >> green >> blue;
-		first_red[i][COLOR_RED] = red + std::min(first_red[i - 1][COLOR_BLUE], first_red[i - 1][COLOR_GREEN]);
-		first_red[i][COLOR_GREEN] = green + std::min(first_red[i - 1][COLOR_RED], first_red[i - 1][COLOR_BLUE]);
-		first_red[i][COLOR_BLUE] = blue + std::min(first_red[i - 1][COLOR_RED], first_red[i - 1][COLOR_GREEN]);
-		first_green[i][COLOR_RED] = red + std::min(first_green[i - 1][COLOR_BLUE], first_green[i - 1][COLOR_GREEN]);
-		first_green[i][COLOR_GREEN] = green + std::min(first_green[i - 1][COLOR_RED], first_green[i - 1][COLOR_BLUE]);
-		first_green[i][COLOR_BLUE] = blue + std::min(first_green[i - 1][COLOR_RED], first_green[i - 1][COLOR_GREEN]);
-		first_blue[i][COLOR_RED] = red + std::min(first_blue[i - 1][COLOR_BLUE], first_blue[i - 1][COLOR_GREEN]);
-		first_blue[i][COLOR_GREEN] = green + std::min(first_blue[i - 1][COLOR_RED], first_blue[i - 1][COLOR_BLUE]);
-		first_blue[i][COLOR_BLUE] = blue + std::min(first_blue[i - 1][COLOR_RED], first_blue[i - 1][COLOR_GREEN]);
+		for (int j = 0; j < 3; ++j)
+		{
+			if (i == j)
+				dp[0][j] = cost[0][j];
+			else
+				dp[0][j] = INT_MAX;
+		}
+		for (int j = 1; j < cnt; ++j)
+		{
+			dp[j][COLOR_RED] = cost[j][COLOR_RED] + std::min(dp[j - 1][COLOR_BLUE], dp[j - 1][COLOR_GREEN]);
+			dp[j][COLOR_GREEN] = cost[j][COLOR_GREEN] + std::min(dp[j - 1][COLOR_RED], dp[j - 1][COLOR_BLUE]);
+			dp[j][COLOR_BLUE] = cost[j][COLOR_BLUE] + std::min(dp[j - 1][COLOR_RED], dp[j - 1][COLOR_GREEN]);
+		}
+		for (int j = 0; j < 3; ++j)
+		{
+			if (i != j && ans > dp[cnt - 1][j])
+				ans = dp[cnt - 1][j];
+		}
 	}
-
-	i--;
-	int ans = std::min(first_red[i][COLOR_GREEN], first_red[i][COLOR_BLUE]);
-	ans = std::min(std::min(first_green[i][COLOR_RED], first_green[i][COLOR_BLUE]), ans);
-	ans = std::min(std::min(first_blue[i][COLOR_RED], first_blue[i][COLOR_GREEN]), ans);
 	std::cout << ans;
-
 	return (0);
 }
