@@ -1,4 +1,3 @@
-#include <bitset>
 #include <iostream>
 
 #define DIVISOR (1000000000)
