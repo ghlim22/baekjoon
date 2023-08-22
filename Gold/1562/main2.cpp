@@ -10,21 +10,21 @@ static unsigned long long func(int len, int digit, int bit)
 {
 	unsigned long long	&ret = dp[len][digit][bit];
 
-	if (ret)
-		return ret;
-	if (len == n)
-		return bit == 3;
+	if (ret > 0)
+		return (ret);
+	if (len == n - 1)
+		return ((bit == 3) ? 1 : 0);
 	if (digit > 0)
 	{
-		ret += func(len + 1, digit - 1, bit | (bit == 9 ? 2 : 0));
-		ret &= DIVISOR;
+		ret += func(len + 1, digit - 1, bit | ((digit - 1 == 0) ? 1 : 0));
+		ret %= DIVISOR;
 	}
 	if (digit < 9)
 	{
-		ret += func(len + 1, digit + 1, bit | (digit == 0 ? 1 : 0));
-		ret &= DIVISOR;
+		ret += func(len + 1, digit + 1, bit | ((digit + 1 == 9) ? 2 : 0));
+		ret %= DIVISOR;
 	}
-	return ret;
+	return (ret);
 }
 
 int main(void)
@@ -32,12 +32,12 @@ int main(void)
 	unsigned long long	ans = 0;
 
 	std::cin >> n;
-	for (int i = 0; i <= 9; ++i)
+	for (int i = 1; i <= 9; ++i)
 	{
-		ans += func(0, i, i == 0 || i == 9);
+		ans += func(0, i, (i == 9) ? 2 : 0);
 		ans %= DIVISOR;
 	}
-	std::cout << ans % DIVISOR << std::endl;	
+	std::cout << ans << std::endl;
 
 	return (0);
 }
