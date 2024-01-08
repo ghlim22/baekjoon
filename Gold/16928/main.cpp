@@ -73,8 +73,8 @@ void solve()
             }
             /* Update count[next_pos] and push next_post into the queue
              * when current path is the new optimal path.
-             * We can prevent the cycle caused by the snake using this
-             * updating policy.
+             * We can prevent a cycle caused by a snake using this
+             * update policy.
              */
             if (count[next_pos] == 0 || count[next_pos] > count[x] + 1)
             {
