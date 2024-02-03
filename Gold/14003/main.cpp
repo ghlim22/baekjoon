@@ -4,9 +4,9 @@
 
 #define MAX_SIZE (1000000)
 
-int inputs[MAX_SIZE];
-int prev[MAX_SIZE];
-int lis[MAX_SIZE];
+int inputs[MAX_SIZE]; /* Save the input number */
+int prev[MAX_SIZE]; /* 각 input index에 대해, LIS 상에서 predecessor의 index를 저장한다. */
+int lis[MAX_SIZE]; /* LIS 상의 순서에 맞는 inputs[]의 index를 저장한다. */
 
 int lowerbound(int len, int key)
 {
