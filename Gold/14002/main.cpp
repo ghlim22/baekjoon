@@ -8,17 +8,6 @@ int dp[MAX_SIZE + 1];
 int prev[MAX_SIZE + 1];
 int size;
 
-int lowerbound(int key, int len)
-{
-    int left = 0;
-    int right = len;
-
-    while (left < right) {
-    }
-
-    return (right);
-}
-
 int main(void)
 {
     int max_len = 1;
