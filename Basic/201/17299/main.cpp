@@ -27,7 +27,8 @@ int main(void)
     for (int i = n; i >= 1; --i) {
         int cur = input[i];
         ngf[i] = -1;
-        while (!stk.empty() && (stk.top() == cur || appr[stk.top()] <= appr[cur])) {
+        while (!stk.empty() &&
+               (stk.top() == cur || appr[stk.top()] <= appr[cur])) {
             stk.pop();
         }
         if (!stk.empty()) {
