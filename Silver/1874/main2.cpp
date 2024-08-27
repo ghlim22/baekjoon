@@ -1,56 +1,36 @@
 #include <iostream>
-#include <queue>
 #include <stack>
+#include <vector>
+
 int main(void)
 {
-    std::stack<int> stk;
-    std::queue<char> q;
-    int num;
+    std::cin.tie(0)->sync_with_stdio(false);
+
     int n;
     int cur = 1;
+    std::stack<int> stk;
+    std::vector<char> output;
 
     std::cin >> n;
-    while (std::cin >> num) {
-        // if (!stk.empty() && num > stk.top() && num < cur) {
-        //     std::cout << "NO" << std::endl;
-        //     exit(0);
-        // }
-        // while (stk.empty() || num > stk.top()) {
-        //     stk.push(cur);
-        //     q.push('+');
-        //     cur++;
-        // }
-        // while (!stk.empty()) {
-        //     q.push('-');
-        //     if (stk.top() == num) {
-        //         stk.pop();
-        //         break;
-        //     }
-        //     stk.pop();
-        // }
-
-        while (num <= cur && (stk.empty() || num > stk.top())) {
-            stk.push(cur);
-            q.push('+');
-            cur++;
+    while (n--) {
+        int input;
+        std::cin >> input;
+        while (input >= cur) {
+            stk.push(cur++);
+            output.push_back('+');
         }
-        if (stk.empty() || stk.top() < num) {
-            std::cout << "NO" << std::endl;
-            exit(0);
-        }
-        while (!stk.empty()) {
-            q.push('-');
-            if (stk.top() == num) {
-                stk.pop();
-                break;
-            }
+        if (!stk.empty() && stk.top() == input) {
             stk.pop();
+            output.push_back('-');
         }
     }
 
-    while (!q.empty()) {
-        std::cout << q.front() << std::endl;
-        q.pop();
+    if (stk.empty()) {
+        for (int i = 0; i < output.size(); ++i) {
+            std::cout << output[i] << "\n";
+        }
+    } else {
+        std::cout << "NO" << "\n";
     }
 
     return 0;
