@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-int queue[10000];
+int deque[10000];
 int front = 0;
 int back = 0;
 
@@ -18,12 +18,12 @@ int main(void)
         if (cmd == "push") {
             int num;
             std::cin >> num;
-            queue[back++] = num;
+            deque[back++] = num;
         } else if (cmd == "pop") {
             if (front == back) {
                 std::cout << -1 << '\n';
             } else {
-                std::cout << queue[front++] << '\n';
+                std::cout << deque[front++] << '\n';
             }
         } else if (cmd == "size") {
             std::cout << back - front << '\n';
@@ -37,13 +37,13 @@ int main(void)
             if (front == back) {
                 std::cout << -1 << '\n';
             } else {
-                std::cout << queue[front] << '\n';
+                std::cout << deque[front] << '\n';
             }
         } else if (cmd == "back") {
             if (front == back) {
                 std::cout << -1 << '\n';
             } else {
-                std::cout << queue[back - 1] << '\n';
+                std::cout << deque[back - 1] << '\n';
             }
         }
     }
