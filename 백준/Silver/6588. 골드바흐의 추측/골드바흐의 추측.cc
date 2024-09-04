@@ -6,7 +6,6 @@
 
 std::vector<int> spf(N + 1);
 std::vector<int> primes;
-bool isPrime[N + 1];
 
 void linearSieve()
 {
@@ -14,7 +13,6 @@ void linearSieve()
 		if (spf[i] == 0) {
 			spf[i] = i;
 			primes.push_back(i);
-			isPrime[i] = true;
 		}
 		for (int p : primes) {
 			long comp = (long)p * i;
@@ -33,7 +31,7 @@ bool solve(int n)
 		if (p > n / 2) {
 			break;
 		}
-		if (isPrime[n - p]) {
+		if (spf[n - p] == n - p) {
 			std::cout << n << " = " << p << " + " << n - p << '\n';
 			return true;
 		}
@@ -44,10 +42,8 @@ bool solve(int n)
 int main(void)
 {
 	std::cin.tie(NULL)->sync_with_stdio(false);
-	
+
 	int n;
-	int a;
-	int b;
 
 	linearSieve();
 
