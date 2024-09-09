@@ -1,35 +1,40 @@
 #include <iostream>
-#define fastio cin.tie(0)->sync_with_stdio(0)
+#include <valarray>
+#include <vector>
 
-using namespace std;
-
-static int get_abs(int num)
+int findGCD(int a, int b)
 {
-	return ((num < 0) ? -num : num);
-}
-
-static int get_gcd(int a, int b)
-{
-	if (!b)
-		return (a);
-	return (get_gcd(b, a % b));
-}
-
-void solve() {
-	
-}
-
-signed main() {
-	fastio;
-	int n, s;
-	int gcd = 0;
-	cin >> n >> s;
-	for (int i = 0; i < n; ++i)
-	{
-		int location;
-		cin >> location;
-		gcd = get_gcd(get_abs(location - s), gcd);
+	if (a < b) {
+		std::swap(a, b);
 	}
-	cout << gcd;
-	return (0);
+
+	int r;
+	while (b != 0) {
+		r = a % b;
+		a = b;
+		b = r;
+	}
+
+	return a;
+}
+
+int main(void)
+{
+	std::cin.tie(NULL)->sync_with_stdio(false);
+
+	int gcd = 0;
+	int subinLocation = 0;
+	int sisterLocation = 0;
+	int sisterCount = 0;
+
+	std::cin >> sisterCount >> subinLocation;
+
+	while (sisterCount--) {
+		std::cin >> sisterLocation;
+		gcd = findGCD(gcd, std::abs(sisterLocation - subinLocation));
+	}
+
+	std::cout << gcd;
+
+	return 0;
 }
