@@ -1,21 +1,20 @@
 #include <iostream>
-#define fastio cin.tie(0)->sync_with_stdio(0)
+#include <vector>
 
-using namespace std;
+int main(void)
+{
+	std::cin.tie(NULL)->sync_with_stdio(false);
 
-signed main() {
-	fastio;
-	int num = 0;
+	int n;
 
-	cin >> num;
-	for (int i = 2; i <= num; ++i)
-	{
-		if (num % i == 0){
-			cout << i << '\n';
-			num /= i;
-			--i;
+	std::cin >> n;
+	
+	for (int i = 2; n > 1; ++i) {
+		while (n % i == 0) {
+			std::cout << i << '\n';
+			n /= i;
 		}
 	}
 
-	return (0);
+	return 0;
 }
