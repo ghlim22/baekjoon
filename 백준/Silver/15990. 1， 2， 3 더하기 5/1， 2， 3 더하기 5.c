@@ -2,36 +2,34 @@
 
 #define MAX (100000)
 #define DIVISOR (1000000009)
+#define ONE (0)
+#define TWO (1)
+#define THREE (2)
 
-int cache[MAX + 1][4];
+int cache[MAX + 1][3];
 
 int main(void) {
   int n;
   int t;
   int ans;
 
-  cache[1][1] = 1;
-  cache[2][2] = 1;
-  cache[3][1] = 1;
-  cache[3][2] = 1;
-  cache[3][3] = 1;
+  cache[1][ONE] = 1;
+  cache[2][TWO] = 1;
+  cache[3][ONE] = 1;
+  cache[3][TWO] = 1;
+  cache[3][THREE] = 1;
 
   for (int i = 4; i <= MAX; ++i) {
-    for (int j = 1; j <= 3; ++j) {
-      for (int k = 1; k <= 3; ++k) {
-        if (k == j)
-          continue;
-        cache[i][j] += cache[i - j][k] % DIVISOR;
-      }
-      cache[i][j] %= DIVISOR;
-    }
+    cache[i][ONE] = (cache[i - 1][TWO] % DIVISOR + cache[i - 1][THREE] % DIVISOR) % DIVISOR;
+    cache[i][TWO] = (cache[i - 2][ONE] % DIVISOR + cache[i - 2][THREE] % DIVISOR) % DIVISOR;
+    cache[i][THREE] = (cache[i - 3][ONE] % DIVISOR + cache[i - 3][TWO] % DIVISOR) % DIVISOR;
   }
 
   scanf("%d", &t);
   while (t--) {
     scanf("%d", &n);
     ans = 0;
-    for (int i = 1; i <= 3; ++i) {
+    for (int i = 0; i < 3; ++i) {
       ans += cache[n][i] % DIVISOR;
       ans %= DIVISOR;
     }
