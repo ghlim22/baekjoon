@@ -48,7 +48,7 @@ void input(int *n) {
   scanf("%d", n);
   getchar();
   for (int i = 0; i < *n; ++i) {
-    ssize_t len = getline(&line, &line_size, stdin);
+    getline(&line, &line_size, stdin);
     for (int j = 0; j < *n; ++j) {
       board[i][j] = line[j];
     }
