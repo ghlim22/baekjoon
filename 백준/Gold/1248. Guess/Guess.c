@@ -31,7 +31,7 @@ void solve(int pos) {
 
   for (int num = -10; num <= 10; ++num) {
     /* Check if the selected number meets the conditions for partial sums */
-    for (int i = 1; i <= pos; ++i) {
+    for (int i = pos; i >= 1; --i) {
       int sum = cache[i][pos - 1] + num;
       switch (S[i][pos]) {
       case '+':
