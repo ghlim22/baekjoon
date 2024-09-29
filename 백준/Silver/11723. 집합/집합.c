@@ -13,19 +13,19 @@ int main(void) {
     scanf("%s", CMD);
 
     if (strcmp(CMD, "all") == 0) {
-      S = ~(0x0000);
+      S = ~0;
     } else if (strcmp(CMD, "empty") == 0) {
-      S = 0x0000;
+      S = 0;
     } else {
       scanf("%d", &X);
       if (strcmp(CMD, "add") == 0) {
-        S |= (0x0001 << X);
+        S |= (1 << X);
       } else if (strcmp(CMD, "remove") == 0) {
-        S &= ~(0x0001 << X);
+        S &= ~(1 << X);
       } else if (strcmp(CMD, "check") == 0) {
-        printf("%d\n", (S & (0x0001 << X) ? 1 : 0));
+        printf("%d\n", (S & (1 << X) ? 1 : 0));
       } else if (strcmp(CMD, "toggle") == 0) {
-        S ^= (0x0001 << X);
+        S ^= (1 << X);
       }
     }
   }
