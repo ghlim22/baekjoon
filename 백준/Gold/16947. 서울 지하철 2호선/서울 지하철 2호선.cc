@@ -25,11 +25,7 @@ void find_cycle(int start, int prev, int cur) {
       continue;
     }
     if (adj == start) {
-    //   for (int i = 1; i <= n; ++i) {
-    //     if (loop_tmp[i])
-    //       std::cout << i << ' ';
-    //   }
-    //   std::cout << '\n';
+      /* Save the loop */
       found_cycle = true;
       memmove(loop, loop_tmp, sizeof(loop));
       return;
@@ -50,7 +46,7 @@ void bfs(int start) {
   while (!q.empty()) {
     pii front = q.front();
     visited[front.first] = true;
-	q.pop();
+    q.pop();
     if (loop[front.first]) {
       dist[start] = front.second;
       return;
@@ -64,7 +60,7 @@ void bfs(int start) {
 }
 
 int main(void) {
-
+  /* INPUT */
   std::cin.tie(NULL)->sync_with_stdio(false);
 
   std::cin >> n;
@@ -87,13 +83,14 @@ int main(void) {
   for (int i = 1; i <= n; ++i) {
     if (loop[i])
       continue;
-	bfs(i);
+    bfs(i);
   }
 
+  /* PRINT */
   for (int i = 1; i <= n; ++i) {
-	std::cout << dist[i];
-	if (i < n)
-		std::cout << ' ';
+    std::cout << dist[i];
+    if (i < n)
+      std::cout << ' ';
   }
 
   return 0;
