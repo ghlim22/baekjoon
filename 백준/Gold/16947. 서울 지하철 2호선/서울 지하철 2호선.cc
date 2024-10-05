@@ -9,59 +9,17 @@
 typedef std::vector<int> vi;
 typedef std::pair<int, int> pii;
 
-bool visited[MAX + 1];
-bool loop_tmp[MAX + 1];
-bool loop[MAX + 1];
-int dist[MAX + 1];
 std::vector<vi> graph(MAX + 1);
-bool found_cycle = false;
+bool visited[MAX + 1];
+bool loop[MAX + 1];
+int prev[MAX + 1];
+int distance[MAX + 1];
 int n;
 
-void find_cycle(int start, int prev, int cur) {
-  visited[cur] = true;
-  loop_tmp[cur] = true;
-  for (int adj : graph[cur]) {
-    if (adj == prev) {
-      continue;
-    }
-    if (adj == start) {
-      /* Save the loop */
-      found_cycle = true;
-      memmove(loop, loop_tmp, sizeof(loop));
-      return;
-    }
-    if (visited[adj]) {
-      continue;
-    }
-    find_cycle(start, cur, adj);
-  }
-  loop_tmp[cur] = false;
-}
-
-void bfs(int start) {
-  memset(visited, 0, sizeof(visited));
-
-  std::queue<pii> q;
-  q.push(std::make_pair(start, 0));
-  while (!q.empty()) {
-    pii front = q.front();
-    visited[front.first] = true;
-    q.pop();
-    if (loop[front.first]) {
-      dist[start] = front.second;
-      return;
-    }
-    for (int adj : graph[front.first]) {
-      if (visited[adj])
-        continue;
-      q.push(std::make_pair(adj, front.second + 1));
-    }
-  }
-}
-
-int main(void) {
-  /* INPUT */
-  std::cin.tie(NULL)->sync_with_stdio(false);
+void input() {
+  std::ios::sync_with_stdio(false);
+  std::cin.tie(0);
+  std::cout.tie(0);
 
   std::cin >> n;
 
@@ -71,27 +29,77 @@ int main(void) {
     graph[a].push_back(b);
     graph[b].push_back(a);
   }
+}
 
-  /* Find a cycle */
-  for (int i = 1; i <= n && !found_cycle; ++i) {
-    memset(visited, 0, sizeof(visited));
-    memset(loop_tmp, 0, sizeof(loop_tmp));
-    find_cycle(i, i, i);
-  }
+/* DFS */
+void find_cycle() {
+  std::stack<int> stk; /* node # */
 
-  /* Calculate distances */
-  for (int i = 1; i <= n; ++i) {
-    if (loop[i])
+  stk.push(1);
+  prev[1] = -1;
+  while (!stk.empty()) {
+    int cur = stk.top();
+    stk.pop();
+    if (visited[cur])
       continue;
-    bfs(i);
-  }
+    visited[cur] = true;
+    for (int adj : graph[cur]) {
+      if (adj == prev[cur])
+        continue;
+      if (visited[adj]) { /* Found a cycle */
+		loop[adj] = true;
+        do {
+          loop[cur] = true;
+          cur = prev[cur];
+        } while (cur != adj);
 
-  /* PRINT */
+        return;
+      }
+      prev[adj] = cur;
+      stk.push(adj);
+    }
+  }
+}
+
+void calculate_distance() {
+  memset(visited, 0, sizeof(visited));
   for (int i = 1; i <= n; ++i) {
-    std::cout << dist[i];
+    if (visited[i])
+      continue;
+    if (!loop[i])
+      continue;
+
+    std::queue<int> q;
+    q.push(i);
+    visited[i] = true;
+    while (!q.empty()) {
+      int cur = q.front();
+      q.pop();
+      for (int adj : graph[cur]) {
+        if (loop[adj])
+          continue;
+        if (visited[adj])
+          continue;
+        visited[adj] = true;
+        distance[adj] = distance[cur] + 1;
+        q.push(adj);
+      }
+    }
+  }
+}
+
+void solve() {
+  find_cycle();
+  calculate_distance();
+  for (int i = 1; i <= n; ++i) {
+    std::cout << distance[i];
     if (i < n)
       std::cout << ' ';
   }
+}
 
+int main(void) {
+  input();
+  solve();
   return 0;
 }
