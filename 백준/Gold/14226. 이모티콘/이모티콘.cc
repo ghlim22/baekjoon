@@ -35,6 +35,8 @@ int main(void) {
 		int ns[3] = {screen, screen + clipboard, screen - 1};
 		int nc[3] = {screen, clipboard, clipboard};
 		for (int i = 0; i < 3; ++i) {
+			if (i == 0 && screen == 0)
+				continue;
 			if (i == 1 && clipboard == 0)
 				continue;
 			if (!(ns[i] >= 0 && ns[i] <= 2 * S))
