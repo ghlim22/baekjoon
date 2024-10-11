@@ -14,11 +14,12 @@ typedef std::pair<int, int> pii_t;
 typedef std::vector<int> vi_t;
 typedef std::vector<pii_t> vpii_t;
 
-int idx = 0;
+int g_depth = 0;
 int N;
 int tree[MAX + 1][2];
+int min[MAX + 1];
+int max[MAX + 1];
 bool isChild[MAX + 1];
-std::vector<vi_t> board(MAX + 1);
 
 void input() {
   std::ios::sync_with_stdio(false);
@@ -53,27 +54,23 @@ int findRoot() {
 int traverse(int offset, int level, int node) {
   if (node == -1)
     return 0;
+  g_depth = std::max(g_depth, level);
   int l = traverse(offset, level + 1, tree[node][L]);
-  board[level].push_back(offset + l);
+  int idx = offset + l;
+  if (min[level] == 0 || idx < min[level])
+    min[level] = idx;
+  if (idx > max[level])
+    max[level] = idx;
   int r = traverse(offset + l + 1, level + 1, tree[node][R]);
   return l + r + 1;
-}
-
-void traverse(int level, int node) {
-  if (node == - 1)
-    return;
-  traverse(level + 1, tree[node][L]);
-  board[level].push_back(idx++);
-  traverse(level + 1, tree[node][R]);
 }
 
 void findWidth() {
   int max_width = 1;
   int level = 1;
   int width;
-  for (int i = 1; !board[i].empty(); ++i) {
-    std::sort(board[i].begin(), board[i].end());
-    width = board[i].back() - board[i].front() + 1;
+  for (int i = 1; i <= g_depth; ++i) {
+    width = max[i] - min[i] + 1;
     if (width > max_width) {
       max_width = width;
       level = i;
@@ -84,8 +81,7 @@ void findWidth() {
 
 void solve() {
   int root = findRoot();
-  //traverse(0, root, 1);
-  traverse(1, root);
+  traverse(1, 1, root);
   findWidth();
 }
 
