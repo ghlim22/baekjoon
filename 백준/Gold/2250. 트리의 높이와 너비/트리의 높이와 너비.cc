@@ -1,24 +1,19 @@
 #include <algorithm>
+#include <cstdint>
 #include <cstring>
-#include <iomanip>
 #include <iostream>
-#include <stack>
-#include <utility>
-#include <vector>
 
 #define MAX (10000)
 #define L (0)
 #define R (1)
 
-typedef std::pair<int, int> pii_t;
-typedef std::vector<int> vi_t;
-typedef std::vector<pii_t> vpii_t;
+typedef unsigned int uint;
 
 int g_depth = 0;
 int N;
 int tree[MAX + 1][2];
-int min[MAX + 1];
-int max[MAX + 1];
+uint min[MAX + 1];
+uint max[MAX + 1];
 bool isChild[MAX + 1];
 
 void input() {
@@ -54,14 +49,15 @@ int findRoot() {
 int traverse(int offset, int level, int node) {
   if (node == -1)
     return 0;
+
   g_depth = std::max(g_depth, level);
+
   int l = traverse(offset, level + 1, tree[node][L]);
-  int idx = offset + l;
-  if (min[level] == 0 || idx < min[level])
-    min[level] = idx;
-  if (idx > max[level])
-    max[level] = idx;
+  uint idx = offset + l;
+  min[level] = std::min(min[level], idx);
+  max[level] = std::max(max[level], idx);
   int r = traverse(offset + l + 1, level + 1, tree[node][R]);
+
   return l + r + 1;
 }
 
@@ -80,6 +76,7 @@ void findWidth() {
 }
 
 void solve() {
+  memset(min, (-1), sizeof(min));
   int root = findRoot();
   traverse(1, 1, root);
   findWidth();
