@@ -10,11 +10,17 @@ bool used[10];
 int conversion[26];
 
 void input() {
+  std::ios::sync_with_stdio(false);
+  std::cin.tie(0);
+  std::cout.tie(0);
+
   std::cin >> N;
   for (int i = 0; i < N; ++i) {
     std::string word;
+
     std::cin >> word;
     words.push_back(word);
+
     for (int i = 0; i < word.size(); ++i) {
       int idx = word[i] - 'A';
       if (appeared[idx] == false) {
@@ -43,6 +49,7 @@ void bruteforce(int level) {
     max_sum = (sum > max_sum) ? sum : max_sum;
     return;
   }
+
   for (int digit = 0; digit <= 9; ++digit) {
     if (used[digit] == true)
       continue;
