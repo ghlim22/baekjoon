@@ -22,47 +22,30 @@ void input() {
     std::cin >> op_cnt[i];
 }
 
-void bruteforce(int level, int sum, int op) {
-  switch (op) {
-  case 0:
-    sum += seq[level];
-    break;
-  case 1:
-    sum -= seq[level];
-    break;
-  case 2:
-    sum *= seq[level];
-    break;
-  case 3:
-    sum /= seq[level];
-    break;
-  default:
-    sum = seq[level];
-    break;
-  }
-
+void bruteforce(int level, int sum) {
   if (level == N - 1) {
     min_value = std::min(min_value, sum);
     max_value = std::max(max_value, sum);
     return;
   }
-
+  int ne = seq[level + 1];
+  int ns[4] = {sum + ne, sum - ne, sum * ne, sum / ne};
   for (int i = 0; i < 4; ++i) {
-    if (op_cnt[i] == 0)
-      continue;
-    op_cnt[i]--;
-    bruteforce(level + 1, sum, i);
-    op_cnt[i]++;
+    if (op_cnt[i] > 0) {
+      op_cnt[i]--;
+      bruteforce(level + 1, ns[i]);
+      op_cnt[i]++;
+    }
   }
 }
 
 void solve() {
-    bruteforce(0, 0, -1);
-    std::cout << max_value << '\n' << min_value;
+  bruteforce(0, seq[0]);
+  std::cout << max_value << '\n' << min_value;
 }
 
 int main() {
-    input();
-    solve();
-    return 0;
+  input();
+  solve();
+  return 0;
 }
