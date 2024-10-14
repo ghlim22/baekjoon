@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 #define MAX (20)
@@ -19,33 +20,23 @@ void input() {
     std::cin >> seq[i];
 }
 
-void bruteforce(int idx, int sum) {
-  if (idx == N) {
-    if (sum != 0)
-      sums.push_back(sum);
-    return;
-  }
-  bruteforce(idx + 1, sum + seq[idx]);
-  bruteforce(idx + 1, sum);
-}
-
 void solve() {
-  bruteforce(0, 0);
-  std::sort(sums.begin(), sums.end());
+  // Sort
+  for (int i = 1; i < N; ++i) {
+    for (int j = i; j > 0 && seq[j - 1] > seq[j]; --j) {
+      std::swap(seq[j], seq[j - 1]);
+    }
+  }
 
-  int j = 0;
-  for (int i = 1; j < sums.size(); ++i) {
-    if (i < sums[j]) {
-      std::cout << i;
+  int sum = 0;
+  for (int i = 0; i < N; ++i) {
+    if (sum + 1 < seq[i]) {
       break;
     }
-    while (i == sums[j]) {
-      j++;
-    }
+    sum += seq[i];
   }
-  if (j == sums.size()) {
-    std::cout << sums.back() + 1;
-  }
+  
+  std::cout << sum + 1;
 }
 
 int main() {
