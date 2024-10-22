@@ -6,8 +6,10 @@
 int WIDTH;
 int HEIGHT;
 int MAX_DEPTH = 0;
-char BOARD[MAX][MAX];
-bool VISITED_CHAR[26];
+
+int BOARD[MAX][MAX];
+int CACHE[MAX][MAX];
+
 const int DY[4] = {0, -1, 1, 0};
 const int DX[4] = {-1, 0, 0, 1};
 
@@ -19,32 +21,37 @@ void input() {
   std::cin >> HEIGHT >> WIDTH;
   for (int i = 0; i < HEIGHT; ++i) {
     for (int j = 0; j < WIDTH; ++j) {
-      std::cin >> BOARD[i][j];
+      char c;
+      std::cin >> c;
+      BOARD[i][j] = c - 'A';
     }
   }
 }
 
-void dfs(int y, int x, int depth) {
+void dfs(int y, int x, int depth, int history) {
+  if (CACHE[y][x] == history)
+    return;
 
   MAX_DEPTH = std::max(depth, MAX_DEPTH);
 
-  VISITED_CHAR[BOARD[y][x] - 'A'] = true;
+  CACHE[y][x] = history;
+
   for (int i = 0; i < 4; ++i) {
+    /* Check range */
     int ny = y + DY[i];
     int nx = x + DX[i];
     if (!(ny >= 0 && ny < HEIGHT))
       continue;
     if (!(nx >= 0 && nx < WIDTH))
       continue;
-    if (VISITED_CHAR[BOARD[ny][nx] - 'A'])
-      continue;
-    dfs(ny, nx, depth + 1);
+
+    if ((history & (1 << BOARD[ny][nx])) == 0)
+      dfs(ny, nx, depth + 1, history | (1 << BOARD[ny][nx]));
   }
-  VISITED_CHAR[BOARD[y][x] - 'A'] = false;
 }
 
 void solve() {
-  dfs(0, 0, 1);
+  dfs(0, 0, 1, (1 << BOARD[0][0]));
   std::cout << MAX_DEPTH;
 }
 
