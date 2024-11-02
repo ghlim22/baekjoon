@@ -1,16 +1,16 @@
 #include <cstring>
 #include <iostream>
-#include <queue>
+#include <vector>
 
-int board[1000][1000];
-int info[1000][1000];
-int group[5001]; /* 1부터 시작 */
-int output[1000][1000];
-int group_cnt = 1;
+#define MAX (1000)
 
-std::vector<int> group_info;
+int input[MAX][MAX];
+int info[MAX][MAX]; /* 각 빈 공간이 어떤 그룹에 속하는지 저장 */
+int output[MAX][MAX];
+int group_cnt = 0;
 int height;
 int width;
+std::vector<int> group_info; /* 각 그룹이 몇 개의 빈 공간으로 구성되었는지 저장 */
 
 const int DY[4] = {0, -1, 1, 0};
 const int DX[4] = {-1, 0, 0, 1};
@@ -24,9 +24,9 @@ int dfs(int r, int c) {
     int nc = c + DX[i];
     if (!(nr >= 0 && nr < height && nc >= 0 && nc < width))
       continue;
-    if (info[nr][nc] != 0)
+    if (info[nr][nc] != -1) /* Already visited */
       continue;
-    if (board[nr][nc] == 1)
+    if (input[nr][nc] == 1) /* Wall */
       continue;
     sum += dfs(nr, nc);
   }
@@ -44,15 +44,15 @@ int main(void) {
     std::string s;
     std::cin >> s;
     for (int j = 0; j < width; ++j) {
-      board[i][j] = s[j] - '0';
+      input[i][j] = s[j] - '0';
     }
   }
 
-  group_info.push_back(0);
+  memset(info, -1, sizeof(info));
 
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      if (board[i][j] == 0 && info[i][j] == 0) {
+      if (input[i][j] == 0 && info[i][j] == -1) {
         group_info.push_back(dfs(i, j));
         group_cnt++;
       }
@@ -61,7 +61,7 @@ int main(void) {
 
   for (int r = 0; r < height; r++) {
     for (int c = 0; c < width; c++) {
-      if (board[r][c] == 0)
+      if (input[r][c] == 0)
         continue;
 
       int sum = 1;
@@ -73,7 +73,7 @@ int main(void) {
         int nc = c + DX[i];
         if (!(nr >= 0 && nr < height && nc >= 0 && nc < width))
           continue;
-        if (board[nr][nc] == 1)
+        if (input[nr][nc] == 1)
           continue;
         adj_groups[adj_cnt++] = info[nr][nc];
       }
