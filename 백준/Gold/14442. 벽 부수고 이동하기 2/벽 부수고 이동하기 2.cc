@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <climits>
 #include <cstring>
 #include <iostream>
 #include <queue>
@@ -8,28 +9,25 @@
 struct info {
   int r;
   int c;
-  int wall;
-  int dist;
-};
-
-struct cost {
-  int dist;
-  int wall;
+  int broken_walls;
+  int distance;
 };
 
 int g_height;
 int g_width;
 int g_k;
 int g_board[MAX][MAX];
-int g_visited[MAX][MAX][11];
-cost g_cost[MAX][MAX];
+int g_broken_walls[MAX][MAX]; /* 부순 벽의 개수를 저장한다. */
 const int DY[4] = {0, -1, 1, 0};
 const int DX[4] = {-1, 0, 0, 1};
 
 int solve(void) {
   std::queue<info> q;
-  info origin = {.r = 0, .c = 0, .wall = g_k, .dist = 1};
-  g_visited[origin.r][origin.c][origin.wall] = 1;
+  info origin = {.r = 0, .c = 0, .broken_walls = 0, .distance = 1};
+
+  std::fill(&g_broken_walls[0][0], &g_broken_walls[0][0] + MAX * MAX, INT_MAX);
+
+  g_broken_walls[0][0] = 0;
   q.push(origin);
 
   while (q.empty() == false) {
@@ -37,42 +35,37 @@ int solve(void) {
     q.pop();
 
     if (cur.r == g_height - 1 && cur.c == g_width - 1) {
-      return cur.dist;
+      return cur.distance;
     }
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; ++i) {
       int nr = cur.r + DY[i];
       int nc = cur.c + DX[i];
-      int nw = cur.wall;
-      int nd = cur.dist + 1;
+      int nw = cur.broken_walls;
+      int nd = cur.distance + 1;
 
       if (!(nr >= 0 && nr < g_height && nc >= 0 && nc < g_width)) {
         continue;
       }
+
       if (g_board[nr][nc] == 1) {
-        if (nw > 0)
-          nw--;
+        if (nw < g_k)
+          ++nw;
         else
           continue;
       }
-      if (g_visited[nr][nc][nw] != 0) {
+
+      /* 새로운 경로는 기존 경로보다 항상 이동 거리가 같거나 더 길다.
+        이 상황에서 새로운 경로의 부순 벽의 개수가 기존 경로의 부순 벽의 개수
+        이상이라면 새로운 경로를 폐기한다. 새로운 경로가 기존 경로보다 유리할 수
+        없기 때문이다.*/
+      if (g_broken_walls[nr][nc] <= nw) {
         continue;
       }
 
-      bool flag = false;
-      for (int j = nw; j <= 10; j++) {
-        int dist = g_visited[nr][nc][j];
-        if (dist != 0 && dist < nd) {
-          flag = true;
-          break;
-        }
-      }
-      if (flag)
-        continue;
-
-      info nxt = {.r = nr, .c = nc, .wall = nw, .dist = nd};
-      g_visited[nr][nc][nw] = nd;
-      q.push(nxt);
+      info next = {.r = nr, .c = nc, .broken_walls = nw, .distance = nd};
+      g_broken_walls[nr][nc] = nw;
+      q.push(next);
     }
   }
 
