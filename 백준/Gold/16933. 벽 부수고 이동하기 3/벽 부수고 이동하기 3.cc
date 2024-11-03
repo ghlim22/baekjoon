@@ -62,14 +62,15 @@ int solve(void) {
       if (!(n.y >= 0 && n.y < N && n.x >= 0 && n.x < M))
         continue;
 
-      if (W[n.y][n.x] <= cur.broken_wall)
+      if (W[n.y][n.x] <=
+          cur.broken_wall + (cur.time == DAY && INPUT[n.y][n.x] ? 1 : 0))
         continue;
 
       if (INPUT[n.y][n.x] == 1) {
         if (cur.broken_wall >= K)
           continue;
         if (cur.time == NIGHT) {
-          /* 낮을 기다린다. */
+          /* 이동하지 않고 낮을 기다린다. */
           n.y = cur.y;
           n.x = cur.x;
         } else {
