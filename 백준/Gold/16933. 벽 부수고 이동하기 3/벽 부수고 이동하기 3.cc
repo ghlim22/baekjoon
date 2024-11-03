@@ -56,14 +56,15 @@ int solve(void) {
       info n = {.y = cur.y + DY[i],
                 .x = cur.x + DX[i],
                 .cost = cur.cost + 1,
-                .broken_wall = cur.broken_wall,
+                .broken_wall =
+                    cur.broken_wall +
+                    ((cur.time == DAY && INPUT[n.y][n.x] == 1) ? 1 : 0),
                 .time = cur.time ^ 1};
 
       if (!(n.y >= 0 && n.y < N && n.x >= 0 && n.x < M))
         continue;
 
-      if (W[n.y][n.x] <=
-          cur.broken_wall + (cur.time == DAY && INPUT[n.y][n.x] ? 1 : 0))
+      if (W[n.y][n.x] <= n.broken_wall)
         continue;
 
       if (INPUT[n.y][n.x] == 1) {
@@ -73,8 +74,6 @@ int solve(void) {
           /* 이동하지 않고 낮을 기다린다. */
           n.y = cur.y;
           n.x = cur.x;
-        } else {
-          n.broken_wall += 1;
         }
       }
 
