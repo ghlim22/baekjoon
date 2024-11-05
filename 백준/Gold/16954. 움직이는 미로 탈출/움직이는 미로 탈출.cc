@@ -68,24 +68,24 @@ int solve(void) {
         q.push(n);
       }
 
-      if (!moved) {
-        memset(VISITED, 0, sizeof(VISITED));
-        for (int i = 0; i < 8; ++i) {
-          pos n = {.y = cur.y + DY[i], .x = cur.x + DX[i]};
+    //   if (!moved) {
+    //     memset(VISITED, 0, sizeof(VISITED));
+    //     for (int i = 0; i < 8; ++i) {
+    //       pos n = {.y = cur.y + DY[i], .x = cur.x + DX[i]};
 
-          if (!(n.y >= 0 && n.y < MAX && n.x >= 0 && n.x < MAX))
-            continue;
-          if (VISITED[n.y][n.x]) {
-            continue;
-          }
-          if (BOARD[n.y][n.x] == '#') {
-            continue;
-          }
+    //       if (!(n.y >= 0 && n.y < MAX && n.x >= 0 && n.x < MAX))
+    //         continue;
+    //       if (VISITED[n.y][n.x]) {
+    //         continue;
+    //       }
+    //       if (BOARD[n.y][n.x] == '#') {
+    //         continue;
+    //       }
 
-          VISITED[n.y][n.x] = true;
-          q.push(n);
-        }
-      }
+    //       VISITED[n.y][n.x] = true;
+    //       q.push(n);
+    //     }
+    //   }
 
       if (wall)
         q.push(cur);
