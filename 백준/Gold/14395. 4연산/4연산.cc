@@ -28,20 +28,6 @@ void solve(void) {
   visited.insert(S);
   q.push(std::make_pair(S, ""));
 
-  // if (S != 0) {
-  //   if (visited.find(0) == visited.end()) {
-  //     visited.insert(0);
-  //     q.push(std::make_pair(0, "-"));
-  //   }
-  // }
-
-  // if (S != 0 && S != 1) {
-  //   if (visited.find(1) == visited.end()) {
-  //     visited.insert(1);
-  //     q.push(std::make_pair(1, "/"));
-  //   }
-  // }
-
   while (!q.empty()) {
     pis_t cur = q.front();
     q.pop();
@@ -58,9 +44,9 @@ void solve(void) {
     long next[4] = {cur.first * (long)cur.first, (long)cur.first << 1, 0, 1};
     char op[4] = {'*', '+', '*', '/'};
     for (int i = 0; i < 4; ++i) {
-      if (cur.first == 0 && i == 3)
+      if (cur.first == 0 && i == 3) /* Avoid division by zero */
         continue;
-      if (next[i] > T * 2)
+      if (next[i] > T)
         continue;
       if (visited.find(next[i]) != visited.end())
         continue;
