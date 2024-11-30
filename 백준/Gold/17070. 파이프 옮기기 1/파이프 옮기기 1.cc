@@ -1,56 +1,13 @@
 #include <iostream>
 
-#define MAX 16
+#define MAX 32
 #define HOR 0
 #define VER 1
 #define DIA 2
 
-struct pos {
-  int y;
-  int x;
-  int type;
-};
-
 int MAP[MAX][MAX];
-bool V[MAX][MAX];
+long CACHE[MAX][MAX][3];
 int N;
-int ANSWER = 0;
-
-void dfs(int y, int x, int type) {
-  if (y == N - 1 && x == N - 1) {
-    ANSWER++;
-    return;
-  }
-
-  if (type == HOR) {
-    if (x + 1 < N && MAP[y][x + 1] == 0) {
-      dfs(y, x + 1, HOR);
-    }
-    if (y + 1 < N && x + 1 < N && MAP[y + 1][x] == 0 &&
-        MAP[y + 1][x + 1] == 0 && MAP[y][x + 1] == 0) {
-      dfs(y + 1, x + 1, DIA);
-    }
-  } else if (type == VER) {
-    if (y + 1 < N && MAP[y + 1][x] == 0) {
-      dfs(y + 1, x, VER);
-    }
-    if (y + 1 < N && x + 1 < N && MAP[y + 1][x] == 0 &&
-        MAP[y + 1][x + 1] == 0 && MAP[y][x + 1] == 0) {
-      dfs(y + 1, x + 1, DIA);
-    }
-  } else {
-    if (x + 1 < N && MAP[y][x + 1] == 0) {
-      dfs(y, x + 1, HOR);
-    }
-    if (y + 1 < N && MAP[y + 1][x] == 0) {
-      dfs(y + 1, x, VER);
-    }
-    if (y + 1 < N && x + 1 < N && MAP[y + 1][x] == 0 &&
-        MAP[y + 1][x + 1] == 0 && MAP[y][x + 1] == 0) {
-      dfs(y + 1, x + 1, DIA);
-    }
-  }
-}
 
 int main(void) {
   std::cin >> N;
@@ -58,7 +15,31 @@ int main(void) {
     for (int j = 0; j < N; ++j)
       std::cin >> MAP[i][j];
   }
-  dfs(0, 1, HOR);
-  std::cout << ANSWER;
+
+  CACHE[0][1][HOR] = 1;
+  for (int col = 2; col < N; ++col) {
+    for (int row = 0; row < N; ++row) {
+      if (MAP[row][col] == 1)
+        continue;
+      // HOR
+      CACHE[row][col][HOR] =
+          CACHE[row][col - 1][HOR] + CACHE[row][col - 1][DIA];
+      // DIA
+      if (row > 0 && MAP[row - 1][col] == 0 && MAP[row][col - 1] == 0) {
+        CACHE[row][col][DIA] = CACHE[row - 1][col - 1][DIA] +
+                               CACHE[row - 1][col - 1][HOR] +
+                               CACHE[row - 1][col - 1][VER];
+      }
+      // VER
+      if (row > 0) {
+        CACHE[row][col][VER] =
+            CACHE[row - 1][col][VER] + CACHE[row - 1][col][DIA];
+      }
+    }
+  }
+
+  std::cout << CACHE[N - 1][N - 1][HOR] + CACHE[N - 1][N - 1][VER] +
+                   CACHE[N - 1][N - 1][DIA];
+
   return 0;
 }
