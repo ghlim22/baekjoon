@@ -1,67 +1,64 @@
-#include <algorithm>
 #include <iostream>
 
 int N;
 int M;
 int H;
-int L[11][31]; /* Index starts from 1  */
+bool L[31][11];
 
 bool check(void) {
-  for (int i = 1; i <= N; ++i) {
-    int cur = i;
-    for (int j = 1; j <= H; ++j) {
-      if (L[cur][j] != 0) {
-        cur = L[cur][j];
-      }
+  for (int col = 1; col <= N; ++col) {
+    int cur = col;
+    for (int row = 1; row <= H; ++row) {
+      if (L[row][cur])
+        cur++;
+      else if (L[row][cur - 1])
+        cur--;
     }
-    if (i != cur)
+    if (cur != col)
       return false;
   }
   return true;
 }
 
-int solve(int ver, int hor, int dep) {
-  if (dep > 3)
-    return -1;
+bool solve(int cnt) {
+  if (cnt == 0) {
+    return check();
+  }
 
-  if (check())
-    return dep;
-
-  int ret = 4;
-  for (int i = hor; i <= H; ++i) {
-    for (int j = 1; j < N; ++j) {
-      if (i == hor && j <= ver)
+  for (int row = 1; row <= H; ++row) {
+    for (int col = 1; col < N; ++col) {
+      if (L[row][col + 1] || L[row][col - 1] || L[row][col])
         continue;
-      if (L[j][i] != 0)
-        continue;
-      if (L[j + 1][i] != 0)
-        continue;
-      L[j][i] = j + 1;
-      L[j + 1][i] = j;
-      int tmp = solve(j, i, dep + 1);
-      if (tmp != -1)
-        ret = std::min(ret, tmp);
-      L[j][i] = 0;
-      L[j + 1][i] = 0;
+      L[row][col] = true;
+      if (solve(cnt - 1))
+        return true;
+      L[row][col] = false;
     }
   }
 
-  if (ret == 4)
-    return -1;
-
-  return ret;
+  return false;
 }
 
 int main(void) {
+  std::ios::sync_with_stdio(false);
+  std::cin.tie(0);
+  std::cout.tie(0);
+
   std::cin >> N >> M >> H;
-  for (int i = 0; i < M; ++i) {
+  while (M--) {
     int a, b;
     std::cin >> a >> b;
-    L[b][a] = b + 1;
-    L[b + 1][a] = b;
+    L[a][b] = true;
   }
 
-  std::cout << solve(0, 1, 0);
+  for (int i = 0; i < 4; ++i) {
+    if (solve(i)) {
+      std::cout << i;
+      return 0;
+    }
+  }
+
+  std::cout << -1;
 
   return 0;
 }
