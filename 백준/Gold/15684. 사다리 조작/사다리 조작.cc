@@ -25,14 +25,16 @@ bool solve(int cnt) {
     return check();
   }
 
-  for (int row = 1; row <= H; ++row) {
-    for (int col = 1; col < N; ++col) {
-      if (L[row][col + 1] || L[row][col - 1] || L[row][col])
+  for (int col = 1; col < N; ++col) {
+    for (int row = 1; row <= H; ++row) {
+      if (L[row][col - 1] || L[row][col + 1] || L[row][col])
         continue;
       L[row][col] = true;
       if (solve(cnt - 1))
         return true;
       L[row][col] = false;
+      while (row <= H && !L[row][col - 1] && !L[row][col + 1])
+        row++;
     }
   }
 
