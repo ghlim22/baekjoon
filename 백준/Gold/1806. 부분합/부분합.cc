@@ -36,6 +36,10 @@ int solve(void) {
 }
 
 int main(void) {
+  std::ios::sync_with_stdio(false);
+  std::cin.tie(0);
+  std::cout.tie(0);
+  
   std::cin >> N >> S;
   for (int i = 1; i <= N; ++i) {
     std::cin >> sequence[i];
