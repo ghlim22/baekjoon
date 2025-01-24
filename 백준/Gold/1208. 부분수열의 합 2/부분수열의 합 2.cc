@@ -2,6 +2,13 @@
 #include <iostream>
 #include <vector>
 
+#define fastio                                                                 \
+  do {                                                                         \
+    std::ios::sync_with_stdio(false);                                          \
+    std::cin.tie(0);                                                           \
+    std::cout.tie(0);                                                          \
+  } while (0)
+
 template <typename T>
 void sum_subset(int cur, int end, T sum, std::vector<T> &res,
                 const std::vector<T> &set) {
@@ -14,6 +21,7 @@ void sum_subset(int cur, int end, T sum, std::vector<T> &res,
 }
 
 int main(void) {
+  fastio;
   long N, S, cnt = 0;
   std::vector<int> set, left_sum, right_sum;
 
