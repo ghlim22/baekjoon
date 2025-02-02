@@ -4,6 +4,13 @@
 #include <queue>
 #include <vector>
 
+#define fastio                                                                 \
+  do {                                                                         \
+    std::ios::sync_with_stdio(false);                                          \
+    std::cin.tie(0);                                                           \
+    std::cout.tie(0);                                                          \
+  } while (0)
+
 typedef std::pair<int, int> pii_t;
 
 const int DY[4] = {0, -1, 1, 0};
@@ -72,6 +79,7 @@ int get_size(int y, int x) {
 }
 
 int main(void) {
+  fastio;
   std::cin >> N >> M;
   for (int y = 0; y < N; ++y) {
     for (int x = 0; x < M; ++x) {
