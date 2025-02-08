@@ -3,6 +3,13 @@
 #include <set>
 #include <vector>
 
+#define fastio                                                                 \
+  do {                                                                         \
+    std::ios::sync_with_stdio(false);                                          \
+    std::cin.tie(0);                                                           \
+    std::cout.tie(0);                                                          \
+  } while (0)
+
 typedef std::vector<char> chv;
 typedef std::vector<std::string> sv;
 
@@ -23,7 +30,7 @@ bool check(const sv &v) {
 int solve(const sv &input) {
   std::set<std::string> s;
   std::queue<sv> q;
-  
+
   s.insert(vector_to_string(input));
   q.push(input);
 
@@ -60,6 +67,7 @@ int solve(const sv &input) {
 }
 
 int main(void) {
+  fastio;
   sv input(3, "");
   for (int i = 0; i < 3; ++i) {
     int size;
