@@ -1,41 +1,27 @@
 #include <algorithm>
 #include <iostream>
-#include <sstream>
 #include <stack>
-#include <string>
 #include <utility>
-#include <vector>
 
 typedef std::pair<int, int> pii_t;
 
-int h[100000];
+int h[100001];
 
-long f(int h[], int low, int high) {
-  if (low == high) {
-    return h[low];
-  }
-
-  int mid = (low + high) / 2;
-  int i = mid;
-  int j = mid;
-  int min_height = h[mid];
-  long area = 0;
-
-  while (low <= i && j <= high) {
-    min_height = std::min(min_height, std::min(h[i], h[j]));
-    area = std::max(area, (long)min_height * (j - i + 1));
-    if (i == low) {
-      j++;
-    } else if (j == high) {
-      i--;
-    } else if (h[i - 1] > h[j + 1]) {
-      i--;
-    } else {
-      j++;
+long f(int h[], int n) {
+  std::stack<pii_t> s; /* <height, index> */
+  long res = 0;
+  for (int i = 0; i < n; ++i) {
+    int j = i;
+    while (!s.empty() && s.top().first >= h[i]) {
+      int ht = s.top().first;
+      j = s.top().second;
+      res = std::max(res, (long)ht * (i - j));
+      s.pop();
     }
+    s.push(std::make_pair(h[i], j));
   }
 
-  return std::max(area, std::max(f(h, low, mid), f(h, mid + 1, high)));
+  return (res);
 }
 
 int main() {
@@ -53,7 +39,8 @@ int main() {
     for (int i = 0; i < n; ++i)
       std::cin >> h[i];
 
-    std::cout << f(h, 0, n - 1) << std::endl;
+    h[n] = 0; /* to compute the remaining elements on the stack */
+    std::cout << f(h, n + 1) << std::endl;
   }
 
   return 0;
