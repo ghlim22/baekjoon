@@ -1,129 +1,108 @@
-#include <memory.h>
+#include <climits>
+#include <cstring>
 #include <iostream>
 #include <queue>
-#include <utility>
-#define MAX_SIZE (20)
-#define INF (100000)
 
-typedef struct s_shark
-{
-    int x;
-    int y;
-    int size;
-    int fish_cnt;
-    int time;
-} t_shark;
+struct shark {
+  int y;
+  int x;
+  int count;
+  int size;
+  int time;
+};
 
-static const int dx[4] = {0, -1, 1, 0};
-static const int dy[4] = {-1, 0, 0, 1};
+struct coord {
+  int y;
+  int x;
+};
 
-static t_shark sh;
-static int map_size;
-static int total_fish;
-static int map[MAX_SIZE][MAX_SIZE];
-static int cost[MAX_SIZE][MAX_SIZE];
+const int dy[4] = {-1, 0, 0, 1};
+const int dx[4] = {0, -1, 1, 0};
 
-static void init_shark(void);
-static void input(void);
-static void solve(void);
+int n;
+int map[20][20];
+int dist[20][20];
 
-int main(void)
-{
-    init_shark();
-    input();
-    solve();
-    return (0);
-}
+bool solve(shark *s) {
+  std::memset(dist, -1, sizeof(dist));
+  coord start = {.y = s->y, .x = s->x};
+  std::queue<coord> q;
+  q.push(start);
+  dist[start.y][start.x] = 0;
 
-static void init_shark(void)
-{
-    sh.x = 0;
-    sh.y = 0;
-    sh.fish_cnt = 0;
-    sh.size = 2;
-    sh.time = 0;
-}
+  // bfs
+  while (!q.empty()) {
+    coord cur = q.front();
+    q.pop();
 
-static void input(void)
-{
-    std::cin >> map_size;
-    for (int i = 0; i < map_size; ++i)
-    {
-        for (int j = 0; j < map_size; ++j)
-        {
-            std::cin >> map[i][j];
-            if (map[i][j] == 9)
-            {
-                map[i][j] = 0;
-                sh.x = j;
-                sh.y = i;
-            }
-            if (map[i][j] != 0 && map[i][j] < sh.size)
-                total_fish++;
-        }
+    for (int i = 0; i < 4; ++i) {
+      int ny = cur.y + dy[i];
+      int nx = cur.x + dx[i];
+      if (!(ny >= 0 && ny < n && nx >= 0 && nx < n))
+        continue;
+      if (dist[ny][nx] != -1)
+        continue;
+      if (map[ny][nx] > s->size)
+        continue;
+      dist[ny][nx] = 1 + dist[cur.y][cur.x];
+      q.push(coord{.y = ny, .x = nx});
     }
+  }
+
+  // eat a fish
+  // find the nearest fish from upperleft to lowerright
+  coord fish;
+  int min_dist = INT_MAX;
+  for (int y = 0; y < n; ++y) {
+    for (int x = 0; x < n; ++x) {
+      if (map[y][x] == 0)
+        continue;
+	  if (map[y][x] == s->size)
+		continue;
+      if (dist[y][x] == -1)
+        continue;
+      if (dist[y][x] >= min_dist)
+        continue;
+      min_dist = dist[y][x];
+      fish.y = y;
+      fish.x = x;
+    }
+  }
+
+  if (min_dist == INT_MAX)
+    return false;
+
+  s->count++;
+  if (s->count == s->size) {
+    s->count = 0;
+    s->size++;
+  }
+  s->time += min_dist;
+  s->y = fish.y;
+  s->x = fish.x;
+  map[fish.y][fish.x] = 0;
+
+  return true;
 }
 
-static bool find_fish(void)
-{
-    int min_cost = INF;
-    std::queue<std::pair<int, int> > q;
-    memset(cost, -1, sizeof(int) * MAX_SIZE * MAX_SIZE);
-
-    q.push(std::make_pair(sh.x, sh.y));
-    cost[sh.y][sh.x] = 0;
-    while (!q.empty())
-    {
-        int x = q.front().first;
-        int y = q.front().second;
-        if ((x != sh.x || y != sh.y) && map[y][x] != 0 && cost[y][x] < min_cost && map[y][x] < sh.size)
-        {
-            min_cost = cost[y][x];
-        }
-        q.pop();
-        for (int i = 0; i < 4; ++i)
-        {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
-            if (nx >= 0 && nx < map_size && ny >= 0 && ny < map_size)
-            {
-                if (cost[ny][nx] == -1 && map[ny][nx] <= sh.size)
-                {
-                    cost[ny][nx] = cost[y][x] + 1;
-                    q.push(std::make_pair(nx, ny));
-                }
-            }
-        }
+int main() {
+  shark s = {.y = 0, .x = 0, .count = 0, .size = 2, .time = 0};
+  std::cin >> n;
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < n; ++j) {
+      std::cin >> map[i][j];
+      if (map[i][j] == 9) {
+        map[i][j] = 0;
+        s.y = i;
+        s.x = j;
+      }
     }
+  }
 
-    if (min_cost == INF)
-        return (false);
-    for (int i = 0; i < map_size; ++i)
-    {
-        for (int j = 0; j < map_size; ++j)
-        {
-            if (map[i][j] != 0 && cost[i][j] == min_cost && map[i][j] < sh.size)
-            {
-                sh.x = j;
-                sh.y = i;
-                sh.fish_cnt++;
-                sh.time += min_cost;
-                map[i][j] = 0;
-                if (sh.fish_cnt == sh.size)
-                {
-                    sh.fish_cnt = 0;
-                    sh.size++;
-                }
-                return (true);
-            }
-        }
-    }
-    return (false);
-}
+  while (solve(&s))
+    ;
 
-static void solve(void)
-{
-    while (find_fish())
-        ;
-    std::cout << sh.time;
+  std::cout << s.time << std::endl;
+
+  return 0;
 }
