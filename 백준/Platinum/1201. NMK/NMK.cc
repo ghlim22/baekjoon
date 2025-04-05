@@ -20,15 +20,14 @@ int main() {
 
   std::vector<int> boundary(m);
   boundary[0] = k;
-  int remainder = n - k;
-  while (remainder > 0) {
-    for (int i = 1; i < m && remainder > 0; ++i) {
-      boundary[i]++;
-      remainder--;
-    }
-  }
+  int q = (n - k) / std::max(1, m - 1);
+  int r = (n - k) % std::max(1, m - 1);
   for (int i = 1; i < m; ++i) {
-    boundary[i] += boundary[i - 1];
+    boundary[i] = boundary[i - 1] + q;
+    if (r > 0) {
+      boundary[i]++;
+      r--;
+    }
   }
 
   std::greater<int> greater;
