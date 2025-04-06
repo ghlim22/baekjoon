@@ -10,6 +10,7 @@
 
 int a[1000000];
 int b[1000000];
+int c[2000000];
 
 int main() {
   fastio;
@@ -20,30 +21,32 @@ int main() {
   for (int i = 0; i < m; ++i)
     std::cin >> b[i];
 
-  std::vector<int> v;
   int i = 0;
   int j = 0;
+  int k = 0;
   while (i < n && j < m) {
     while (i < n && a[i] <= b[j]) {
-      v.push_back(a[i++]);
+      c[k++] = a[i++];
     }
-	if (i == n) {
-		break;
-	}
+    if (i == n) {
+      break;
+    }
     while (j < m && b[j] <= a[i]) {
-      v.push_back(b[j++]);
+      c[k++] = b[j++];
     }
   }
   while (i < n) {
-    v.push_back(a[i++]);
+    c[k++] = a[i++];
   }
   while (j < m) {
-    v.push_back(b[j++]);
+    c[k++] = b[j++];
   }
 
-  for (int num : v) {
-    std::cout << num << ' ';
+  i = 0;
+  for (; i < k; ++i) {
+    std::cout << c[i] << ' ';
   }
+
   std::cout << std::endl;
 
   return 0;
