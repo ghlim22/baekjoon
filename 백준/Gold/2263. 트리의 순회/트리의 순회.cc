@@ -15,12 +15,12 @@ void f(int ilo, int plo, int size) {
   }
 
   int root = postorder[plo + size - 1];
-  //int leftsize = pos[root] - ilo;
-  int rootpos = ilo;
-  while (inorder[rootpos] != root) {
-    rootpos++;
-  }
-  int leftsize = rootpos - ilo;
+  int leftsize = pos[root] - ilo;
+  // int rootpos = ilo;
+  // while (inorder[rootpos] != root) {
+  //   rootpos++;
+  // }
+  // int leftsize = rootpos - ilo;
 
   printf("%d ", root);
   f(ilo, plo, leftsize);
