@@ -1,12 +1,12 @@
 #include <stdio.h>
 
-long f(int y, int x, int n) {
+int f(int y, int x, int n) {
   if (n == 1) {
     return (y * 2 + x);
   }
 
   int half = (1 << (n - 1));
-  long halfsize = (1l << (2 * n - 2));
+  int halfsize = (1 << (2 * n - 2));
   if (y < half) {
     if (x < half) {
       return f(y, x, n - 1);
@@ -25,7 +25,7 @@ long f(int y, int x, int n) {
 int main(void) {
   int n, r, c;
   scanf("%d %d %d", &n, &r, &c);
-  printf("%ld\n", f(r, c, n));
+  printf("%d\n", f(r, c, n));
 
   return 0;
 }
