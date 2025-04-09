@@ -3,13 +3,13 @@
 int H[5] = {0, 2, 1, 4, 3};
 int V[5] = {0, 4, 3, 2, 1};
 
-int hori(int *num, int cursor, int isRight) {
+int moveH(int *num, int cursor, int goRight) {
   if (cursor == -1)
     return 0;
 
   int recur = 0;
   int lastDigit = num[cursor];
-  if (isRight) {
+  if (goRight) {
     if (lastDigit == 1 || lastDigit == 4) {
       recur = 1;
     }
@@ -17,7 +17,7 @@ int hori(int *num, int cursor, int isRight) {
     recur = 1;
   }
 
-  if (recur && !hori(num, cursor - 1, isRight)) {
+  if (recur && !moveH(num, cursor - 1, goRight)) {
     return 0;
   }
 
@@ -25,13 +25,13 @@ int hori(int *num, int cursor, int isRight) {
   return 1;
 }
 
-int vert(int *num, int cursor, int isUp) {
+int moveV(int *num, int cursor, int goUp) {
   if (cursor == -1)
     return 0;
 
   int recur = 0;
   int lastDigit = num[cursor];
-  if (isUp) {
+  if (goUp) {
     if (lastDigit == 1 || lastDigit == 2) {
       recur = 1;
     }
@@ -39,7 +39,7 @@ int vert(int *num, int cursor, int isUp) {
     recur = 1;
   }
 
-  if (recur && !vert(num, cursor - 1, isUp)) {
+  if (recur && !moveV(num, cursor - 1, goUp)) {
     return 0;
   }
 
@@ -61,59 +61,39 @@ int main(void) {
 
   int fail = 0;
 
-  if (x > 0) {
-    for (int i = 0; i < len && x > 0 && !fail; ++i) {
-      /* 2 ^ (len - 1 - i) is the length of a unit at level i */
-      long count = x >> (len - 1 - i); /* x / (2 ^ (len - 1 - i)) */
-      for (int j = 0; j < count; ++j) {
-        if (!hori(num, i, 1)) {
-          fail = 1;
-          break;
-        }
-      }
-      x &= ~(-1l << (len - 1 - i)); /* x %= (2 ^ (len - 1 -i)) */
-    }
-  }
-
+  int goRight = 1;
   if (x < 0) {
+    goRight = 0;
     x = -x;
-    for (int i = 0; i < len && x > 0 && !fail; ++i) {
-      long count = x >> (len - 1 - i);
-      for (int j = 0; j < count; ++j) {
-        if (!hori(num, i, 0)) {
-          fail = 1;
-          break;
-        }
-      }
-      x &= ~(-1l << (len - 1 - i));
-    }
   }
 
-  if (y > 0) {
-    for (int i = 0; i < len && y > 0 && !fail; ++i) {
-      long count = y >> (len - 1 - i);
-      for (int j = 0; j < count; ++j) {
-        if (!vert(num, i, 1)) {
-          fail = 1;
-          break;
-        }
-      }
-      y &= ~(-1l << (len - 1 - i));
-    }
-  }
-
+  int goUp = 1;
   if (y < 0) {
+    goUp = 0;
     y = -y;
-    for (int i = 0; i < len && y > 0 && !fail; ++i) {
-      long count = y >> (len - 1 - i);
-      for (int j = 0; j < count; ++j) {
-        if (!vert(num, i, 0)) {
-          fail = 1;
-          break;
-        }
+  }
+
+  for (int i = 0; i < len && x > 0 && !fail; ++i) {
+    /* 2 ^ (len - 1 - i) is the length of a unit at level i */
+    long count = x >> (len - 1 - i); /* x / (2 ^ (len - 1 - i)) */
+    for (int j = 0; j < count; ++j) {
+      if (!moveH(num, i, goRight)) {
+        fail = 1;
+        break;
       }
-      y &= ~(-1l << (len - 1 - i));
     }
+    x &= ~(-1l << (len - 1 - i));
+  }
+
+  for (int i = 0; i < len && y > 0 && !fail; ++i) {
+    long count = y >> (len - 1 - i);
+    for (int j = 0; j < count; ++j) {
+      if (!moveV(num, i, goUp)) {
+        fail = 1;
+        break;
+      }
+    }
+    y &= ~(-1l << (len - 1 - i));
   }
 
   if (fail) {
