@@ -3,48 +3,6 @@
 int H[5] = {0, 2, 1, 4, 3};
 int V[5] = {0, 4, 3, 2, 1};
 
-// long rightLeft(int len, long num, int isRight) {
-//   if (len == 0)
-//     return -1;
-
-//   long prevNum = num / 10;
-//   int lastDigit = num % 10;
-
-//   if (isRight) {
-//     if (lastDigit == 1 || lastDigit == 4) {
-//       prevNum = rightLeft(len - 1, prevNum, isRight);
-//     }
-//   } else if (lastDigit == 2 || lastDigit == 3) {
-//     prevNum = rightLeft(len - 1, prevNum, isRight);
-//   }
-
-//   if (prevNum == -1) {
-//     return prevNum;
-//   }
-//   return prevNum * 10 + H[lastDigit];
-// }
-
-// long upDown(int len, long num, int isUp) {
-//   if (len == 0)
-//     return -1;
-
-//   long prevNum = num / 10;
-//   int lastDigit = num % 10;
-
-//   if (isUp) {
-//     if (lastDigit == 1 || lastDigit == 2) {
-//       prevNum = upDown(len - 1, prevNum, isUp);
-//     }
-//   } else if (lastDigit == 3 || lastDigit == 4) {
-//     prevNum = upDown(len - 1, prevNum, isUp);
-//   }
-
-//   if (prevNum == -1) {
-//     return prevNum;
-//   }
-//   return prevNum * 10 + V[lastDigit];
-// }
-
 int hori(int *num, int cursor, int isRight) {
   if (cursor == -1)
     return 0;
@@ -113,7 +71,7 @@ int main(void) {
           break;
         }
       }
-      x &= ~(-1l << (len - 1 - i));
+      x &= ~(-1l << (len - 1 - i)); /* x %= (2 ^ (len - 1 -i)) */
     }
   }
 
