@@ -1,31 +1,37 @@
+#include <algorithm>
 #include <iostream>
 #include <utility>
-#include <algorithm>
-#define fastio cin.tie(0)->sync_with_stdio(0)
-#define precision(x) cout << fixed; cout.precision(x)
-#define ll long long
-#define pii pair<int, int>
 
-using namespace std;
+#define fastio                                                                 \
+  do {                                                                         \
+    std::ios::sync_with_stdio(false);                                          \
+    std::cin.tie(0);                                                           \
+    std::cout.tie(0);                                                          \
+  } while (0)
 
-signed main() 
-{
-	fastio;
-	int N;
+typedef std::pair<int, int> pii_t;
 
-	cin >> N;
-	pair<int, int> arr[N];
-	for (int i = 0; i < N; ++i)
-	{
-		int input;
-		cin >> input;
-		arr[i].first = input;
-		arr[i].second = i;
-	}
-	sort(arr, arr + N);
-	int ans = 0;
-	for (int i = 0; i < N; ++i)
-		ans = max(ans, arr[i].second - i);
-	cout << (ans + 1) << "\n";
-	return 0;
+pii_t ARRAY[500000];
+
+int main() {
+  fastio;
+
+  int n;
+  std::cin >> n;
+  for (int i = 0; i < n; ++i) {
+    std::cin >> ARRAY[i].first;
+    ARRAY[i].second = i;
+  }
+
+  std::sort(ARRAY, ARRAY + n);
+
+  int maxSwapCount = 0;
+  for (int i = 0; i < n; ++i) {
+    int swapCount = ARRAY[i].second - i;
+    maxSwapCount = std::max(maxSwapCount, swapCount);
+  }
+
+  std::cout << maxSwapCount + 1;
+
+  return 0;
 }
