@@ -1,40 +1,64 @@
 #include <stdio.h>
+#include <string.h>
 
-static void mergesort(int *arr, int low, int high, int *tmp)
-{
-    if (low >= high)
-        return ;
-    int mid = (low + high) / 2;
-    mergesort(arr, low, mid, tmp);
-    mergesort(arr, mid + 1, high, tmp);
-    int i = low;
-    int j = mid + 1;
-    int k = low;
-    for (;k <= high; ++k)
-    {
-        if (j > high)
-            tmp[k] = arr[i++];
-        else if (i > mid)
-            tmp[k] = arr[j++];
-        else if (arr[i] <= arr[j])
-            tmp[k] = arr[i++];
-        else
-            tmp[k] = arr[j++];
-    }
-    for (i = low; i <= high; ++i)
-        arr[i] = tmp[i];
+int ARRAY[1000000];
+int TEMP[1000000];
+
+void swap(int *a, int *b) {
+  int tmp = *a;
+  *a = *b;
+  *b = tmp;
 }
 
-int main(void)
-{
-    int N;
+void sort(int *base, int size) {
+  if (size <= 1) {
+    return;
+  }
+  if (size <= 2) {
+    if (base[0] > base[1]) {
+      swap(&base[0], &base[1]);
+    }
+    return;
+  }
 
-    scanf("%d", &N);
-    int arr[N], tmp[N];
-    for (int i = 0; i < N; ++i)
-        scanf("%d", &arr[i]);
-    mergesort(arr, 0, N - 1, tmp);
-    for (int i = 0; i < N; ++i)
-        printf("%d\n", arr[i]);
-    return (0);
+  int *left = base;
+  int *right = base + size / 2;
+  const int LEFT_SIZE = size / 2;
+  const int RIGHT_SIZE = (size + 1) / 2;
+
+  sort(left, LEFT_SIZE);
+  sort(right, RIGHT_SIZE);
+
+  int i = 0;
+  int j = 0;
+  int k = 0;
+  while (i < LEFT_SIZE && j < RIGHT_SIZE) {
+    if (left[i] <= right[j]) {
+      TEMP[k++] = left[i++];
+    } else {
+      TEMP[k++] = right[j++];
+    }
+  }
+
+  while (i < LEFT_SIZE) {
+    TEMP[k++] = left[i++];
+  }
+  while (j < RIGHT_SIZE) {
+    TEMP[k++] = right[j++];
+  }
+
+  memmove(base, TEMP, sizeof(int) * k);
+}
+
+int main(void) {
+  int n;
+  scanf("%d", &n);
+  for (int i = 0; i < n; ++i) {
+    scanf("%d", &ARRAY[i]);
+  }
+  sort(ARRAY, n);
+  for (int i = 0; i < n; ++i) {
+    printf("%d\n", ARRAY[i]);
+  }
+  return 0;
 }
