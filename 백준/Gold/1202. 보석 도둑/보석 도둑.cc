@@ -1,52 +1,69 @@
 #include <algorithm>
 #include <iostream>
+#include <vector>
 #include <queue>
 
-#define fastio                                                                 \
-  do {                                                                         \
-    std::ios::sync_with_stdio(false);                                          \
-    std::cin.tie(0);                                                           \
-    std::cout.tie(0);                                                          \
-  } while (0)
+#define fastio                            \
+	do                                    \
+	{                                     \
+		std::ios::sync_with_stdio(false); \
+		std::cin.tie(0);                  \
+		std::cout.tie(0);                 \
+	} while (0)
 
-struct jewelry {
-  int m;
-  int v;
-} jewelries[300000];
+struct jewelry
+{
+	int m;
+	int v;
+};
 
-int bags[300000];
+int main()
+{
+	fastio;
 
-bool operator<(const jewelry &lhs, const jewelry &rhs) { return lhs.m < rhs.m; }
+	int n;
+	int k;
 
-int main() {
-  fastio;
+	std::cin >> n >> k;
 
-  int n, k;
-  std::cin >> n >> k;
-  for (int i = 0; i < n; ++i) {
-    std::cin >> jewelries[i].m >> jewelries[i].v;
-  }
-  for (int i = 0; i < k; ++i) {
-    std::cin >> bags[i];
-  }
+	std::vector<jewelry> items(n);
+	std::vector<int> bags(k);
 
-  std::sort(jewelries, jewelries + n);
-  std::sort(bags, bags + k);
+	for (int i = 0; i < n; ++i)
+		std::cin >> items[i].m >> items[i].v;
 
-  long total = 0;
-  std::priority_queue<int> pq;
-  for (int i = 0, j = 0; i < k; ++i) {
-    while (j < n && jewelries[j].m <= bags[i]) /* push jewelries which can be put into the bag i */
-      pq.push(jewelries[j++].v);
-    if (pq.empty())
-      continue;
-    /* all the jewelries in pq can be put into the bag i */
-    /* select the valuable one in pq */
-    total += pq.top();
-    pq.pop();
-  }
+	for (int i = 0; i < k; ++i)
+		std::cin >> bags[i];
 
-  std::cout << total << std::endl;
+	std::sort(items.begin(), items.end(), [](const auto &a, const auto &b)
+			  { return a.m < b.m; });
+	std::sort(bags.begin(), bags.end());
 
-  return 0;
+	std::priority_queue<int> pq;
+	int j = 0;
+	long sum = 0;
+	for (int i = 0; i < k; ++i)
+	{
+		while (j < n && items[j].m <= bags[i])
+		{
+			pq.push(items[j].v);
+			j++;
+		}
+
+		if (pq.empty())
+		{
+			if (j == n)
+			{
+				break;
+			}
+			continue;
+		}
+
+		sum += pq.top();
+		pq.pop();
+	}
+
+	std::cout << sum;
+
+	return 0;
 }
