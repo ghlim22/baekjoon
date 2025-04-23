@@ -2,30 +2,15 @@
 
 int main()
 {
-	int n, m, k;
+	int n, m, k, teams = 0;
 	std::cin >> n >> m >> k;
-	while (m > 0 && k > 0)
-	{
-		while (n > m * 2 && k > 0)
-		{
-			n--;
-			k--;
-		}
-		if (k > 0)
-		{
-			m--;
-			k--;
-		}
-	}
-
-	int teams = 0;
-	while (m > 0 && n >= 2)
+	/* Form teams, leaving at least k students */
+	while (n >= 2 && m >= 1 && (n + m - 3) >= k)
 	{
 		n -= 2;
-		m--;
+		m -= 1;
 		teams++;
 	}
-
 	std::cout << teams;
 
 	return 0;
