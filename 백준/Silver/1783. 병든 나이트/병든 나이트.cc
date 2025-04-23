@@ -6,29 +6,28 @@ const int DX[4] = {1, 1, 2, 2};
 
 int bfs(int n, int m)
 {
-	int time = 0;
-	std::queue<std::pair<int, int>> q;
-	q.push({n - 1, 0});
-	for (; time < 3 && !q.empty(); ++time)
+	int y = n - 1;
+	int x = 0;
+	bool go = true;
+	int time = 1;
+	while (go && time < 4)
 	{
-		int len = q.size();
-		while (len--)
+		go = false;
+		for (int i = 0; i < 4; ++i)
 		{
-			for (int i = 0; i < 4; ++i)
-			{
-				int ny = q.front().first + DY[i];
-				int nx = q.front().second + DX[i];
-				if (!(ny >= 0 && ny < n && nx >= 0 && nx < m))
-					continue;
-				q.push({ny, nx});
-			}
-			q.pop();
-		}
-		if (q.empty())
+			int ny = y + DY[i];
+			int nx = x + DX[i];
+			if (!(ny >= 0 && ny < n && nx >= 0 && nx < m))
+				continue;
+			go = true;
+			time++;
+			y = ny;
+			x = nx;
 			break;
+		}
 	}
 
-	return time + 1;
+	return time;
 }
 
 int main()
