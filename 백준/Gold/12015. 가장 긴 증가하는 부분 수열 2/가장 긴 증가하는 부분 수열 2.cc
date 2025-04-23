@@ -17,27 +17,19 @@ int main()
 	int n;
 	std::cin >> n;
 
-	std::vector<int> v(n);
+	std::vector<int> v;
 	for (int i = 0; i < n; ++i)
-		std::cin >> v[i];
-
-	std::vector<int> lis;
-	lis.push_back(v[0]);
-
-	for (int i = 1; i < n; ++i)
 	{
-		auto pos = std::lower_bound(lis.begin(), lis.end(), v[i]);
-		if (pos == lis.end())
-		{
-			lis.push_back(v[i]);
-		}
+		int num;
+		std::cin >> num;
+		auto it = std::lower_bound(v.begin(), v.end(), num);
+		if (it == v.end())
+			v.push_back(num);
 		else
-		{
-			*pos = v[i];
-		}
+			*it = num;
 	}
 
-	std::cout << lis.size();
+	std::cout << v.size();
 
 	return 0;
 }
