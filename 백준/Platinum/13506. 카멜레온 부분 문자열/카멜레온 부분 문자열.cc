@@ -45,6 +45,10 @@ int find(const std::string s, const std::vector<int> fail)
 
 int main()
 {
+	std::cin.tie(nullptr);
+	std::cout.tie(nullptr);
+	std::ios::sync_with_stdio(false);
+
 	std::string S;
 	std::cin >> S;
 	auto f = preprocess(S);
