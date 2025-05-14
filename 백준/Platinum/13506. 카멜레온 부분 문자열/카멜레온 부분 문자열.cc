@@ -27,16 +27,9 @@ int find(const std::string s, const std::vector<int> fail)
 	for (int m = fail[n - 1]; m > 0; m = fail[m - 1]) {
 		int start = m - fail[m - 1];
 		int end = n - start;
-		int j = 0;
 		for (int i = start; i < end; ++i) {
-			while (j > 0 && s[i] != s[j]) {
-				j = fail[j - 1];
-			}
-			if (s[i] == s[j]) {
-				j++;
-				if (j == m) {
-					return m;
-				}
+			if (fail[i] == m) {
+				return m;
 			}
 		}
 	}
