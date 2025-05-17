@@ -1,179 +1,162 @@
 #include <algorithm>
-#include <cstring>
 #include <iostream>
+#include <map>
 #include <queue>
+#include <utility>
 #include <vector>
 
-struct Node
+class AhoCorasick
 {
-	Node()
-		: valid(false), dictionaryLink(-1), suffixLink(-1), len(0)
+public:
+	AhoCorasick()
 	{
-		std::memset(children, -1, sizeof(children));
-	}
-	bool valid;
-	int dictionaryLink;
-	int suffixLink;
-	int len;
-	int children[26];
-};
-
-typedef std::vector<Node> Trie;
-
-int init(Trie& trie)
-{
-	Node x;
-	trie.push_back(x);
-	return (int)trie.size() - 1;
-}
-
-void add(Trie& trie, int node, const std::string& word, int index)
-{
-	if (index == word.size()) {
-		trie[node].valid = true;
-		return;
+		_root = init();
 	}
 
-	int i = word[index] - 'a';
-	if (trie[node].children[i] == -1) {
-		int next = init(trie);
-		trie[node].children[i] = next;
-		trie[next].len = index + 1;
+	void Add(const std::string& s)
+	{
+		add(_root, s, 0);
 	}
-	int child = trie[node].children[i];
-	add(trie, child, word, index + 1);
-}
 
-void construct(Trie& trie, int root)
-{
-	std::queue<int> q;
+	void Construct()
+	{
+		_trie[_root].pi = _root;
 
-	trie[root].suffixLink = root;
-	q.push(root);
-	while (!q.empty()) {
-		int cur = q.front();
-		q.pop();
+		std::queue<int> q;
+		q.push(_root);
 
-		for (int i = 0; i < 26; ++i) {
-			int child = trie[cur].children[i];
-			if (child == -1) {
-				continue;
+		while (!q.empty()) {
+			int cur = q.front();
+			q.pop();
+			Node& curnode = _trie[cur];
+
+			for (auto it = curnode.children.begin(); it != curnode.children.end(); ++it) {
+				int child = it->second;
+				if (cur == _root) {
+					_trie[child].pi = _root;
+				}
+				else {
+					char ch = it->first;
+					int pi = curnode.pi;
+					while (pi != _root && _trie[pi].children.count(ch) == 0) {
+						pi = _trie[pi].pi;
+					}
+					if (_trie[pi].children.count(ch) > 0) {
+						pi = _trie[pi].children[ch];
+					}
+					_trie[child].pi = pi;
+					_trie[child].len = std::max(_trie[child].len, _trie[pi].len);
+				}
+				q.push(child);
 			}
+		}
+	}
 
-			if (cur == root) {
-				trie[child].suffixLink = root;
+	int Solve(const std::string& s) 
+	{
+		std::vector<std::pair<int, int>> m;
+		int n = s.size();
+		int node = _root;
+
+		for (int i = 0; i < n; ++i) {
+			char ch = s[i];
+			while (node != _root && _trie[node].children.count(ch) == 0) {
+				node = _trie[node].pi;
+			}
+			if (_trie[node].children.count(ch) > 0) {
+				node = _trie[node].children[ch];
+			}
+			if (_trie[node].len > 0) {
+				m.push_back({ i - _trie[node].len + 1, 0 });
+				m.push_back({ i, 1 });
+			}
+		}
+
+		std::sort(m.begin(), m.end());
+		int open = 0;
+		int start;
+		for (auto& p : m) {
+			if (!p.second) {
+				if (open == 0) {
+					start = p.first;
+				}
+				open += 1;
 			}
 			else {
-				/* suffix link */
-				int pi = trie[cur].suffixLink;
-				while (pi != root && trie[pi].children[i] == -1) {
-					pi = trie[pi].suffixLink;
-				}
-				if (trie[pi].children[i] != -1) {
-					pi = trie[pi].children[i];
-				}
-				trie[child].suffixLink = pi;
-
-				/* dictionary link */
-				while (pi != root && !trie[pi].valid && trie[pi].dictionaryLink == -1) {
-					pi = trie[pi].suffixLink;
-				}
-				if (trie[pi].valid) {
-					trie[child].dictionaryLink = pi;
-				}
-				else if (trie[pi].dictionaryLink != -1) {
-					trie[child].dictionaryLink = trie[pi].dictionaryLink;
+				open -= 1;
+				if (open == 0) {
+					n -= (p.first - start + 1);
 				}
 			}
-			q.push(child);
-		}
-	}
-}
-
-void solve(Trie& trie, int root, std::string& street, std::vector<std::pair<int, int>> &matches)
-{
-	int changedCount = 0;
-	int node = root;
-	for (int i = 0; i < street.size(); ++i) {
-		int c = street[i] - 'a';
-		while (node != root && trie[node].children[c] == -1) {
-			node = trie[node].suffixLink;
-		}
-		if (trie[node].children[c] == -1) {
-			continue;
 		}
 
-		node = trie[node].children[c];
-		if (trie[node].valid) {
-			matches.push_back({ i - trie[node].len + 1, i });
-		}
-		else {
-			int dict = trie[node].dictionaryLink;
-			if (dict == -1) {
-				continue;
-			}
-			matches.push_back({ i - trie[dict].len + 1, i });
-		}
+		return n;
 	}
-}
+
+private:
+	struct Node
+	{
+		Node()
+			: len(0), pi(-1)
+		{
+		}
+		std::map<char, int> children;
+		int len;
+		int pi;
+	};
+
+	int init()
+	{
+		Node x;
+		_trie.push_back(x);
+		return _trie.size() - 1;
+	}
+
+	void add(int node, const std::string& s, int index)
+	{
+		if (s.size() == index) {
+			_trie[node].len = s.size();
+			return;
+		}
+
+		char ch = s[index];
+		if (_trie[node].children.count(ch) == 0) {
+			int next = init();
+			_trie[node].children.insert({ ch, next });
+		}
+		int child = _trie[node].children[ch];
+		add(child, s, index + 1);
+	}
+
+	int _root;
+	std::vector<Node> _trie;
+};
 
 int main()
 {
+	std::cin.tie(nullptr);
+	std::cout.tie(nullptr);
+	std::ios::sync_with_stdio(false);
+
 	int N;
 	int M;
-	std::string street;
-	std::string tile;
-	Trie trie;
-	int root = init(trie);
+	std::string s;
+	AhoCorasick ac;
 
 	std::cin >> N;
-	std::cin >> street;
-
-	std::vector<std::pair<int, int>> matches;
+	std::cin >> s;
 
 	std::cin >> M;
-	for (int i = 0; i < M; ++i) {
+	while (M--) {
+		std::string tile;
 		std::cin >> tile;
-		add(trie, root, tile, 0);
-		if (i > 0 && i % 150 == 0) {
-			construct(trie, root);
-			solve(trie, root, street, matches);
-			trie.clear();
-			root = init(trie);
-		}
+		
+		ac.Add(tile);
 	}
 
-	if (trie.size() > 1) {
-		construct(trie, root);
-		solve(trie, root, street, matches);
-	}
+	ac.Construct();
 
-	std::sort(matches.begin(), matches.end(), [](const auto& a, const auto& b) {
-		if (a.first == b.first) {
-			return a.second > b.second;
-		}
-		return a.first < b.first;
-		});
-
-	std::vector<bool> changed(N, false);
-	int count = N;
-	for (auto& p : matches) {
-		int start = p.first;
-		int end = p.second;
-		for (int i = start; i <= end; ++i) {
-			if (changed[i])
-				break;
-			changed[i] = true;
-			count -= 1;
-		}
-		for (int i = end; i >= start; --i) {
-			if (changed[i])
-				break;
-			changed[i] = true;
-			count -= 1;
-		}
-	}
-	std::cout << count;
+	std::cout << ac.Solve(s);
 
 	return 0;
 }
