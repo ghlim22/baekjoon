@@ -1,27 +1,25 @@
 #include <algorithm>
 #include <iostream>
 
-int T[1500001];
-int P[1500001];
-int D[1500002];
+int D[1500001];
 
 int main()
 {
+	std::cin.tie(nullptr);
+	std::cout.tie(nullptr);
+	std::ios::sync_with_stdio(false);
+
 	int N;
 	std::cin >> N;
-	for (int i = 1; i <= N; ++i)
-		std::cin >> T[i] >> P[i];
-
-	for (int i = 1; i <= N; ++i) {
-		if (i + T[i] <= N + 1) {
-			D[i + T[i]] = std::max(D[i + T[i]], D[i] + P[i]);
+	for (int i = 0; i < N; ++i) {
+		int T, P;
+		std::cin >> T >> P;
+		if (i + T <= N) {
+			D[i + T] = std::max(D[i + T], D[i] + P);
 		}
-		if (i + 1 <= N + 1) {
-			D[i + 1] = std::max(D[i + 1], D[i]);
-		}
+		D[i + 1] = std::max(D[i + 1], D[i]);
 	}
-
-	std::cout << D[N + 1];
+	std::cout << D[N];
 
 	return 0;
 }
