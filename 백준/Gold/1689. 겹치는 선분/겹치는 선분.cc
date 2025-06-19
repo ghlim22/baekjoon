@@ -5,6 +5,10 @@
 
 int main()
 {
+	std::cin.tie(nullptr);
+	std::cout.tie(nullptr);
+	std::ios::sync_with_stdio(false);
+	
 	int n;
 	std::cin >> n;
 
