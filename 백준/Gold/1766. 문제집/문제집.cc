@@ -19,15 +19,15 @@ int main()
 		inDegree[v]+=1;
 	}
 
-	std::priority_queue<int, std::vector<int>, std::greater<int>> pq;
+	std::priority_queue<int> pq;
 	for (int i = 1; i <= n; ++i) {
 		if (inDegree[i]==0) {
-			pq.push(i);
+			pq.push(-i);
 		}
 	}
 
 	while (!pq.empty()) {
-		int u = pq.top();
+		int u = -pq.top();
 		pq.pop();
 
 		std::cout << u << ' ';
@@ -35,7 +35,7 @@ int main()
 		for (int v : graph[u]) {
 			inDegree[v] -= 1;
 			if (inDegree[v] == 0) {
-				pq.push(v);
+				pq.push(-v);
 			}
 		}	
 	}
