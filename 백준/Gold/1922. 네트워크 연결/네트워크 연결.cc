@@ -16,26 +16,25 @@ int main()
 		int a, b, c;
 		std::cin >> a >> b >> c;
 		if (a!=b) {
-			graph[a].push_back({b, c});
-			graph[b].push_back({a, c});
+			graph[a].push_back({-c, b}); /* cost, to */
+			graph[b].push_back({-c, a});
 		}
 	}
 
 	tree[1] = true;
-	std::priority_queue<edge> pq;
+	std::priority_queue<std::pair<int, int>> pq; /* cost, to */
 	for (const auto &e : graph[1]) {
-		pq.push({-e.second, {1, e.first}});
+		pq.push(e);
 	}
 
 	int cost = 0;
 	int treeSize = 1;
 	while (treeSize < n) {
-		edge e = pq.top();
+		auto e = pq.top();
 		pq.pop();
 
 		int weight = -e.first;
-		int u = e.second.first;
-		int v = e.second.second;
+		int v = e.second;
 		if (tree[v]) {
 			continue;
 		}
@@ -43,13 +42,12 @@ int main()
 		cost += weight;
 		tree[v] = true;
 		treeSize += 1;
+
 		for (const auto &e : graph[v]) {
-			int adj = e.first;
-			int weight = e.second;
-			if (tree[adj]) {
+			if (tree[e.second]) {
 				continue;
 			}
-			pq.push({-weight, {v, adj}});
+			pq.push(e);
 		}
 	}
 
