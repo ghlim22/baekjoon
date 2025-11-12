@@ -43,7 +43,7 @@ int main(void) {
   for (int start = 1; start <= n; ++start) {
 	double maxtime = 0;
 	for (int i = 1; i <= n; ++i) {
-		for (int j = 1; j <= n; ++j) {
+		for (int j = i; j <= n; ++j) {
 			double time = std::max(D[start][i], D[start][j]);
 			int diff = std::abs(D[start][i] - D[start][j]);
 			time += (M[i][j] - diff) / 2.0;
