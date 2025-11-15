@@ -41,6 +41,10 @@ void solve(int a, int b) {
 			b = table[i][b];
 		}
 	}
+	if (a == b) {
+		std::cout << a << '\n';
+		return;
+	}
 
 	for (int k = 17; k >= 0; --k) {
 		if (table[k][a] != table[k][b])	{
@@ -49,11 +53,7 @@ void solve(int a, int b) {
 		}
 	}
 
-	if (a == b) {
-		std::cout << a << '\n';
-	} else {
-		std::cout << table[0][a] << '\n';
-	}
+	std::cout << table[0][a] << '\n';
 }
 
 int main() {
