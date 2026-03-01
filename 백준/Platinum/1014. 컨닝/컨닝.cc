@@ -1,85 +1,101 @@
-#include <iostream>
-#include <utility>
-#include <cstring>
 #include <algorithm>
+#include <cstring>
+#include <iostream>
 #include <vector>
+#include <utility>
 
-#define fastio                                                                 \
-  do {                                                                         \
-	std::ios::sync_with_stdio(false);                                          \
-	std::cin.tie(0);                                                           \
-	std::cout.tie(0);                                                          \
-  } while (0)
+using namespace std;
 
+int c, n, m;
+bool map[10][10];
+int match[2][50];
+bool adjAB[50][50];
+bool visitedA[50];
+int sizeA, sizeB, total;
 
-int map[10][10];
-long cache[10][1 << 10];
-std::vector<std::vector<int>> allSeatings(11);
-int n, m;
-
-
-void findAllSeating(int cursor, int colSize, int seating) {
-	if (cursor == colSize) {
-		allSeatings[colSize].push_back(seating);
-		return;
-	}
-	if (cursor == 0 || !(seating & (1 << (cursor - 1)))) {
-		findAllSeating(cursor + 1, colSize, seating | (1 << cursor));
-	}
-	findAllSeating(cursor + 1, colSize, seating);
+int ind(int row, int col) {
+	return (col / 2) * n + row;
 }
 
+void buildGraph() {
+	for (int col = 0; col < m - 1; ++col) {
+		for (int row = 0; row < n; ++row) {
+			if (!map[row][col]) continue;
+			int set = col % 2;
+			int u = ind(row, col);
+			pair<int, int> end[3] = {{row - 1, col + 1}, {row, col + 1}, {row + 1, col + 1}};
+			for (int i = 0; i < 3; ++i) {
+				int r = end[i].first;
+				int c = end[i].second;
+				if (r < 0 || r >= n) continue;
+				if (!map[r][c]) continue;
 
-long solve(int cursor, int status) {
-	if (cursor == n) {
-		return 0;
-	}
-	if (cache[cursor][status] != -1) {
-		return cache[cursor][status];
-	}
-	cache[cursor][status] = 0;
-	long maxval = 0;
-	for (int curStatus : allSeatings[m]) {
-		long count = 0;
-		for (int i = 0; i < m; ++i) {
-			int put = curStatus & (1 << i);
-			if (!put) {
-				continue;
-			} else if (!map[cursor][i] || (i > 0 && (status & (1 << (i - 1)))) || (i < m - 1 && (status & (1 << (i + 1))))) {
-				goto NEXT;
-			}
-			count++;
-		}
-		maxval = std::max(maxval, count + solve(cursor + 1, curStatus));
-		NEXT: ;
-	}
-	return cache[cursor][status] = maxval;
-}
-
-int main(void) {
-  fastio;
-
-  for (int i = 1; i <= 10; ++i) {
-	findAllSeating(0, i, 0);
-  }
-
-  int c;
-  std::cin >> c;
-  while (c--) {
-	memset(map, 0, sizeof(map));
-	memset(cache, -1, sizeof(cache));
-	std::cin >> n >> m;
-	for (int i = 0; i < n; ++i) {
-		std::string s;
-		std::cin >> s;
-		for (int j = 0; j < m; ++j) {
-			if (s[j] == '.') {
-				map[i][j] = 1;
+				int v = ind(r, c);
+				if (!set) {
+					adjAB[u][v] = true;
+				} else {
+					adjAB[v][u] = true;
+				}
 			}
 		}
 	}
-	std::cout << solve(0, 0) << '\n';
-  }
+}
 
-  return 0;
+bool dfs(int nodeA) {
+	if (visitedA[nodeA]) {
+		return false;
+	}
+	visitedA[nodeA] = true;
+	for (int nodeB = 0; nodeB < sizeB; ++nodeB) {
+		if (!adjAB[nodeA][nodeB]) continue;
+		if (match[1][nodeB] == -1 || dfs(match[1][nodeB])) {
+			match[0][nodeA] = nodeB;
+			match[1][nodeB] = nodeA;
+			return true;
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	cin >> c;
+	while (c--)
+	{
+		memset(map, 0, sizeof(map));
+		memset(match, -1, sizeof(match));
+		memset(adjAB, 0, sizeof(adjAB));
+
+		cin >> n >> m;
+		sizeA = (m + 1) / 2 * n;
+		sizeB = m / 2 * n;
+		total = 0;
+
+		for (int i = 0; i < n; ++i)
+		{
+			string s;
+			cin >> s;
+			for (int j = 0; j < m; ++j)
+			{
+				if (s[j] == '.') {
+					map[i][j] = true;
+					++total;
+				}
+			}
+		}
+
+		buildGraph();
+
+		int matched = 0;
+		for (int nodeA = 0; nodeA < sizeA; ++nodeA) {
+			memset(visitedA, 0, sizeof(visitedA));
+			if (dfs(nodeA)) {
+				++matched;
+			}
+		}
+
+		cout << total - matched << endl;
+	}
+
+	return 0;
 }
